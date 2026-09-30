@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réseau Aide Alimentaire</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --primary: #047857; 
+            --bg-body: #f3f4f6;
+            --text-dark: #1f2937;
+        }
+
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; height: 100vh; overflow: hidden; color: var(--text-dark); background: var(--bg-body); }
+        
+        #sidebar { width: 420px; background: white; display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 1000; }
+        
+        .header { background: var(--primary); color: white; padding: 25px 20px; }
+        .header h1 { margin: 0; font-size: 1.4rem; font-weight: 600; }
+        .header p { margin: 8px 0 0 0; font-size: 0.9rem; opacity: 0.9; }
+
+        .status-card { background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; margin: 15px 20px; padding: 15px; }
+        .status-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 600; color: #065f46; font-size: 0.95rem; }
+        .status-card-badge { background-color: var(--primary); color: white; padding: 3px 12px; border-radius: 20px; font-size: 0.85rem; }
+        .status-card-bottom { font-size: 0.85rem; color: #059669; font-weight: 500; }
+
+        .tabs { display: flex; border-bottom: 1px solid #e5e7eb; padding: 0 10px; }
+        .tab-btn { flex: 1; padding: 15px; border: none; background: none; font-size: 0.95rem; font-weight: 600; color: #6b7280; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+        
+        .tab-content { flex: 1; overflow-y: auto; padding: 20px; display: none; background: var(--bg-body); }
+        .tab-content.active { display: block; }
+
+        .card { background: white; border-radius: 8px; padding: 15px; border: 1px solid #e5e7eb; margin-bottom: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+
+        .accordion-header { background: white; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px 15px; margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.95rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.2s; }
+        .accordion-header:hover { background: #f9fafb; }
+        .accordion-header .type-title { display: flex; align-items: center; gap: 8px; }
+        .accordion-header .count { background: #f3f4f6; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; color: #4b5563; }
+        .accordion-icon { transition: transform 0.3s ease; font-size: 0.8rem; color: #9ca3af; }
+        .accordion-header.active .accordion-icon { transform: rotate(180deg); }
+        
+        .accordion-content { display: none; padding-bottom: 10px; }
+        .accordion-content.active { display: block; }
+
+        .actor-card { cursor: pointer; transition: transform 0.1s; border-left: 5px solid gray; margin-bottom: 10px; }
+        .actor-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .actor-card h3 { margin: 0 0 5px 0; color: var(--text-dark); font-size: 1.05rem; }
+        .actor-address { font-size: 0.85rem; color: #4b5563; margin-bottom: 8px; }
+        .actor-resume { font-size: 0.85rem; color: #6b7280; font-style: italic; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px;}
+        
+        .suggest-link { display: inline-block; font-size: 0.8rem; color: var(--primary); cursor: pointer; font-weight: 600; margin-top: 5px; }
+        .suggest-link:hover { text-decoration: underline; }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #374151; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.95rem; box-sizing: border-box; font-family: inherit; }
+        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+        textarea.form-control { resize: vertical; min-height: 80px; }
+        
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #065f46; }
+        .btn-outline { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
+        .btn-outline:hover { background: #e5e7eb; }
+
+        #map { flex: 1; z-index: 1; }
+        .custom-pin { display: flex; justify-content: center; align-items: center; }
+        .custom-pin div { border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.4); }
+        .popup-link { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .popup-link:hover { text-decoration: underline; }
+
+        .privacy-notice { font-size: 0.8rem; background: #eff6ff; color: #1d4ed8; padding: 12px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #bfdbfe; }
+        #errorMsg { display:none; background:#fee2e2; color:#b91c1c; padding:15px; margin: 0 20px; border-radius: 6px; font-size: 0.9rem;}
+
+        /* Fenêtre Modale de Suggestion */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-box { background: white; padding: 25px; border-radius: 8px; width: 90%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; }
+        .close-btn { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.5rem; color: #6b7280; cursor: pointer; line-height: 1; }
+        .close-btn:hover { color: #111827; }
+        .modal-title { margin-top: 0; font-size: 1.2rem; color: #111827; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <div class="header">
+            <h1>Réseau Aide Alimentaire</h1>
+            <p>Carte interactive et annuaire collaboratif.</p>
+        </div>
+        
+        <div class="status-card">
+            <div class="status-card-top">
+                Acteurs répertoriés :
+                <span class="status-card-badge" id="actorCount">0</span>
+            </div>
+            <div class="status-card-bottom" id="statusText">
+                Chargement de la base de données...
+            </div>
+        </div>
+        <div id="errorMsg"></div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('annuaire')">Annuaire</button>
+            <button class="tab-btn" onclick="switchTab('ajouter')">Ajouter un acteur</button>
+        </div>
+
+        <div id="tab-annuaire" class="tab-content active">
+            <div class="privacy-notice">
+                <b>Confidentialité :</b> Seules les données publiques (Nom, Type, Adresse, Résumé) sont affichées sur cette interface.
+            </div>
+
+            <div class="card" style="padding: 10px;">
+                <select id="typeFilter" class="form-control" style="border: none; background: transparent;" onchange="renderData()">
+                    <option value="ALL">Tous les types de structures</option>
+                </select>
+            </div>
+
+            <div id="actorsList">
+                <p style="text-align:center; color:#6b7280; font-style:italic;">Chargement...</p>
+            </div>
+        </div>
+
+        <div id="tab-ajouter" class="tab-content">
+            <form id="addForm" class="card">
+                <div class="form-group">
+                    <label>Nom de la structure *</label>
+                    <input type="text" id="nom" class="form-control" required placeholder="Ex: Banque Alimentaire locale">
+                </div>
+                
+                <!-- NOUVEAU: Choix du type dynamique -->
+                <div class="form-group">
+                    <label>Type de structure *</label>
+                    <select id="typeSelect" class="form-control" required onchange="toggleNewType()">
+                        <option value="" disabled selected>Sélectionnez un type existant...</option>
+                        <!-- Rempli par JavaScript -->
+                    </select>
+                    <input type="text" id="typeNew" class="form-control" placeholder="Saisissez le nouveau type..." style="display: none; margin-top: 8px;">
+                </div>
+
+                <div class="form-group">
+                    <label>Localisation *</label>
+                    <textarea id="adresse" class="form-control" required placeholder="Saisissez l'adresse postale..."></textarea>
+                    <div style="text-align: center; margin: 10px 0; color: #9ca3af; font-size: 0.85rem; font-weight: bold;">OU</div>
+                    <button type="button" class="btn btn-outline" id="btnPointer" onclick="activerPointage()">Pointer sur la carte</button>
+                    <input type="hidden" id="lat">
+                    <input type="hidden" id="lng">
+                </div>
+                <div class="form-group">
+                    <label>Résumé / Infos pratiques (optionnel)</label>
+                    <textarea id="resume" class="form-control" placeholder="Horaires, conditions d'accès..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Site web (optionnel)</label>
+                    <input type="url" id="site" class="form-control" placeholder="https://...">
+                </div>
+                <button type="submit" class="btn btn-primary" id="btnSubmit">Enregistrer l'acteur</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <div id="suggestionModal" class="modal-overlay">
+        <div class="modal-box">
+            <button class="close-btn" onclick="closeSuggestionModal()">&times;</button>
+            <h3 class="modal-title">Suggérer une modification</h3>
+            <form id="suggestionForm">
+                <div class="form-group">
+                    <label>Structure concernée</label>
+                    <input type="text" id="sugg-nom" class="form-control" readonly style="background:#f3f4f6; color:#6b7280; border:none;">
+                </div>
+                <div class="form-group">
+                    <label>Quelle modification proposez-vous ? *</label>
+                    <textarea id="sugg-message" class="form-control" required placeholder="Ex: Les nouveaux horaires sont de 9h à 12h. Le numéro n'est plus attribué..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="btnSuggSubmit">Envoyer la suggestion</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // ⚠️ REMETTRE VOTRE URL GOOGLE SCRIPT ICI
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzToXZyhf8meagetE0C7KQApUnKVRe5AoV-32rl9fRS-EzclAuRyH94uoQGY8A4KfS6DQ/exec";
+
+        const map = L.map('map').setView([48.624, 2.444], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+        let acteursData = [];
+        let markerLayer = L.layerGroup().addTo(map);
+        let selectionMarker = null;
+        let modePointage = false;
+
+        const colorPalette = ["#059669", "#2563eb", "#d97706", "#dc2626", "#7c3aed", "#0891b2", "#be123c"];
+        let typeColors = {}; let colorIndex = 0;
+
+        function getColorForType(type) {
+            if (!type) return "#6b7280";
+            let cleanType = type.trim().toUpperCase();
+            if (!typeColors[cleanType]) {
+                typeColors[cleanType] = colorPalette[colorIndex % colorPalette.length];
+                colorIndex++;
+            }
+            return typeColors[cleanType];
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelector(`button[onclick="switchTab('${tabId}')"]`).classList.add('active');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        }
+
+        async function chargerDonnees() {
+            try {
+                const reponse = await fetch(SCRIPT_URL);
+                const data = await reponse.json();
+                if(data.error) throw new Error(data.error);
+                
+                acteursData = data;
+                document.getElementById('statusText').innerHTML = 'Connecté à la base de données';
+                preparerFiltresEtFormulaire();
+                renderData();
+            } catch (erreur) {
+                document.getElementById('statusText').innerHTML = 'Erreur de connexion';
+                document.getElementById('errorMsg').style.display = 'block';
+                document.getElementById('errorMsg').innerText = "Impossible de lire le fichier : " + erreur.message;
+            }
+        }
+
+        // --- NOUVEAU: Remplissage dynamique des deux listes déroulantes (Filtre + Formulaire) ---
+        function preparerFiltresEtFormulaire() {
+            const typesUniques = [...new Set(acteursData.map(a => a.type.trim()).filter(t => t !== ""))].sort();
+            
+            // 1. Mise à jour du filtre principal
+            const selectFilter = document.getElementById('typeFilter');
+            selectFilter.innerHTML = '<option value="ALL">Tous les types de structures</option>';
+            typesUniques.forEach(type => {
+                const opt = document.createElement('option');
+                opt.value = type; opt.textContent = type;
+                selectFilter.appendChild(opt);
+            });
+
+            // 2. Mise à jour du menu déroulant du formulaire d'ajout
+            const selectForm = document.getElementById('typeSelect');
+            selectForm.innerHTML = '<option value="" disabled selected>Sélectionnez un type existant...</option>';
+            typesUniques.forEach(type => {
+                const opt = document.createElement('option');
+                opt.value = type; opt.textContent = type;
+                selectForm.appendChild(opt);
+            });
+            
+            // Option permanente pour ajouter un type
+            const optNew = document.createElement('option');
+            optNew.value = "NOUVEAU_TYPE";
+            optNew.textContent = "➕ Ajouter un nouveau type...";
+            selectForm.appendChild(optNew);
+        }
+
+        // Affiche ou masque le champ texte si "Nouveau type" est sélectionné
+        function toggleNewType() {
+            const select = document.getElementById('typeSelect');
+            const inputNew = document.getElementById('typeNew');
+            if (select.value === "NOUVEAU_TYPE") {
+                inputNew.style.display = "block";
+                inputNew.required = true;
+            } else {
+                inputNew.style.display = "none";
+                inputNew.required = false;
+                inputNew.value = "";
+            }
+        }
+
+        function renderData() {
+            markerLayer.clearLayers();
+            const listContainer = document.getElementById('actorsList');
+            listContainer.innerHTML = '';
+            
+            const currentFilter = document.getElementById('typeFilter').value;
+            let affichesCount = 0;
+            const groupedData = {};
+
+            acteursData.forEach(acteur => {
+                if(currentFilter !== "ALL" && acteur.type.trim() !== currentFilter) return;
+                
+                affichesCount++;
+                const color = getColorForType(acteur.type);
+                const typeName = acteur.type.trim() || "Autre";
+
+                if(!groupedData[typeName]) groupedData[typeName] = [];
+                groupedData[typeName].push(acteur);
+
+                const customIcon = L.divIcon({
+                    className: 'custom-pin',
+                    html: `<div style="background-color:${color}; width:20px; height:20px;"></div>`,
+                    iconSize: [26, 26], iconAnchor: [13, 13]
+                });
+
+                const safeName = acteur.nom.replace(/'/g, "\\'");
+
+                let popupContent = `<strong>${acteur.nom}</strong><br><span style="color:${color}; font-size:0.8rem; font-weight:bold; text-transform:uppercase;">${acteur.type}</span><br><span style="font-size:0.85rem; color:#4b5563;">${acteur.adresse}</span>`;
+                if(acteur.site_web) popupContent += `<br><a href="${acteur.site_web}" target="_blank" class="popup-link">Consulter le site web</a>`;
+                popupContent += `<br><div style="margin-top:10px; border-top:1px solid #e5e7eb; padding-top:5px;"><a class="suggest-link" onclick="openSuggestionModal('${safeName}')">✎ Suggérer une modification</a></div>`;
+
+                acteur.marker = L.marker([acteur.latitude, acteur.longitude], {icon: customIcon})
+                    .bindPopup(popupContent).addTo(markerLayer);
+            });
+
+            document.getElementById('actorCount').innerText = affichesCount;
+
+            Object.keys(groupedData).sort().forEach(type => {
+                const acteurs = groupedData[type];
+                const color = getColorForType(type);
+                
+                const header = document.createElement('div');
+                header.className = 'accordion-header';
+                if (currentFilter !== "ALL" || Object.keys(groupedData).length === 1) header.classList.add('active');
+
+                header.innerHTML = `<div class="type-title"><span style="color:${color}; font-size: 14px;">●</span> ${type} <span class="count">${acteurs.length}</span></div><span class="accordion-icon">▼</span>`;
+
+                const content = document.createElement('div');
+                content.className = 'accordion-content';
+                if (header.classList.contains('active')) content.classList.add('active');
+
+                header.onclick = () => { header.classList.toggle('active'); content.classList.toggle('active'); };
+
+                acteurs.forEach(acteur => {
+                    const card = document.createElement('div');
+                    card.className = 'card actor-card';
+                    card.style.borderLeftColor = color;
+                    const safeName = acteur.nom.replace(/'/g, "\\'");
+                    
+                    let cardHTML = `<h3>${acteur.nom}</h3><div class="actor-address">${acteur.adresse}</div>`;
+                    if(acteur.resume) cardHTML += `<div class="actor-resume">${acteur.resume}</div>`;
+                    cardHTML += `<div style="text-align:right;"><a class="suggest-link" onclick="event.stopPropagation(); openSuggestionModal('${safeName}')">✎ Modifier</a></div>`;
+                    
+                    card.innerHTML = cardHTML;
+                    card.onclick = () => { map.setView([acteur.latitude, acteur.longitude], 16); acteur.marker.openPopup(); };
+                    content.appendChild(card);
+                });
+
+                listContainer.appendChild(header);
+                listContainer.appendChild(content);
+            });
+
+            if(affichesCount === 0) listContainer.innerHTML = '<p style="text-align:center; color:#6b7280; font-style:italic;">Aucun résultat.</p>';
+        }
+
+        function openSuggestionModal(nomActeur) {
+            document.getElementById('sugg-nom').value = nomActeur;
+            document.getElementById('sugg-message').value = "";
+            document.getElementById('suggestionModal').classList.add('active');
+        }
+
+        function closeSuggestionModal() {
+            document.getElementById('suggestionModal').classList.remove('active');
+        }
+
+        document.getElementById('suggestionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSuggSubmit');
+            btn.innerText = "Envoi...";
+            btn.disabled = true;
+
+            const payload = {
+                action: "suggestion",
+                nom_acteur: document.getElementById('sugg-nom').value,
+                message: document.getElementById('sugg-message').value
+            };
+
+            try {
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                alert("Merci ! Votre suggestion a été transmise aux administrateurs.");
+                closeSuggestionModal();
+            } catch(erreur) {
+                alert("Erreur lors de l'envoi.");
+            } finally {
+                btn.innerText = "Envoyer la suggestion";
+                btn.disabled = false;
+            }
+        });
+
+        document.getElementById('adresse').addEventListener('input', function() {
+            document.getElementById('lat').value = ''; document.getElementById('lng').value = '';
+            if(selectionMarker) map.removeLayer(selectionMarker);
+            document.getElementById('btnPointer').innerHTML = "Pointer sur la carte";
+            document.getElementById('btnPointer').className = "btn btn-outline";
+        });
+
+        function activerPointage() {
+            modePointage = true;
+            document.getElementById('btnPointer').innerHTML = "Cliquez sur l'emplacement exact";
+            document.getElementById('btnPointer').className = "btn btn-primary";
+            document.getElementById('map').style.cursor = 'crosshair';
+        }
+
+        map.on('click', async function(e) {
+            if (modePointage) {
+                document.getElementById('lat').value = e.latlng.lat.toFixed(6);
+                document.getElementById('lng').value = e.latlng.lng.toFixed(6);
+                
+                if(selectionMarker) map.removeLayer(selectionMarker);
+                selectionMarker = L.marker(e.latlng).addTo(map);
+                
+                modePointage = false;
+                document.getElementById('btnPointer').innerHTML = "Position enregistrée";
+                document.getElementById('btnPointer').className = "btn btn-outline";
+                document.getElementById('map').style.cursor = 'grab';
+
+                try {
+                    document.getElementById('adresse').value = "Recherche de l'adresse en cours...";
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${e.latlng.lat}&lon=${e.latlng.lng}`);
+                    const data = await res.json();
+                    if(data && data.display_name) document.getElementById('adresse').value = data.display_name;
+                    else document.getElementById('adresse').value = "";
+                } catch(err) {
+                    document.getElementById('adresse').value = "";
+                }
+            }
+        });
+
+        document.getElementById('addForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmit');
+            btn.innerText = "Enregistrement en cours...";
+            btn.disabled = true;
+
+            let lat = document.getElementById('lat').value; 
+            let lng = document.getElementById('lng').value;
+            const adresse = document.getElementById('adresse').value;
+
+            if (!lat || !lng) {
+                try {
+                    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(adresse)}`);
+                    const data = await res.json();
+                    if(data && data.length > 0) { lat = data[0].lat; lng = data[0].lon; } 
+                    else {
+                        alert("L'adresse n'a pas pu être trouvée. Veuillez vérifier l'orthographe ou utiliser le bouton 'Pointer sur la carte'.");
+                        btn.innerText = "Enregistrer l'acteur"; btn.disabled = false; return;
+                    }
+                } catch(err) {
+                    alert("Erreur de connexion au service de cartographie.");
+                    btn.disabled = false; return;
+                }
+            }
+
+            // Détermination du type final envoyé (sélectionné ou saisi manuellement)
+            let finalType = document.getElementById('typeSelect').value;
+            if (finalType === "NOUVEAU_TYPE") {
+                finalType = document.getElementById('typeNew').value;
+            }
+
+            const nouvelActeur = {
+                nom: document.getElementById('nom').value,
+                type: finalType,
+                adresse: adresse,
+                resume: document.getElementById('resume').value,
+                site_web: document.getElementById('site').value,
+                latitude: lat,
+                longitude: lng
+            };
+
+            try {
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(nouvelActeur) });
+                alert("L'acteur a été ajouté avec succès !");
+                document.getElementById('addForm').reset();
+                toggleNewType(); // Masquer le champ nouveau type après reset
+                if(selectionMarker) map.removeLayer(selectionMarker);
+                document.getElementById('btnPointer').innerHTML = "Pointer sur la carte";
+                chargerDonnees();
+                switchTab('annuaire');
+            } catch(erreur) {
+                alert("Erreur d'enregistrement.");
+            } finally {
+                btn.innerText = "Enregistrer l'acteur";
+                btn.disabled = false;
+            }
+        });
+
+        chargerDonnees();
+    </script>
+</body>
+</html>
