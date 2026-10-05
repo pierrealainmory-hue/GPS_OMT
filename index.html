@@ -52,52 +52,77 @@
             .form-label { @apply block text-sm font-bold text-gpsDark mb-3 leading-tight; }
             .form-input { @apply w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-gpsLight focus:border-transparent outline-none font-georgia bg-gray-50/50 hover:bg-gray-50 transition-all shadow-sm; }
             .btn-primary { @apply bg-gpsLight text-white font-oswald uppercase px-8 py-4 rounded-xl shadow-md hover:bg-green-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 text-lg tracking-wide flex justify-center items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed; }
-            
-            /* Custom Checkbox/Radio cards */
             .card-checkbox { @apply flex flex-col items-center justify-center gap-3 p-4 border-2 border-gray-100 rounded-2xl cursor-pointer transition-all hover:bg-green-50/50 bg-white h-full relative; }
+            
+            /* Boutons d'évaluation nuancée (Pistes) */
+            .vote-btn { @apply flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 text-sm font-bold text-gray-500 hover:bg-gray-50 transition-all cursor-pointer; }
+            .vote-btn.active-tres { @apply bg-green-50 text-gpsLight border-gpsLight shadow-sm; }
+            .vote-btn.active-plutot { @apply bg-yellow-50 text-yellow-600 border-yellow-400 shadow-sm; }
+            .vote-btn.active-pas { @apply bg-red-50 text-red-500 border-red-300 shadow-sm; }
         }
         
-        /* Custom Range Slider */
         input[type=range] { @apply w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer transition-all; }
         input[type=range]::-webkit-slider-thumb { @apply appearance-none w-7 h-7 rounded-full bg-gpsLight cursor-pointer shadow-md border-4 border-white transition-transform hover:scale-110; }
         input[type=range]:active::-webkit-slider-thumb { @apply scale-95 bg-green-700; }
 
-        /* Leaflet popups customization */
         .leaflet-popup-content-wrapper { @apply rounded-xl shadow-lg border border-gray-100; }
-        .leaflet-popup-content { @apply m-4; }
+        .leaflet-popup-content { @apply m-0; }
+        
+        /* Dropdown custom */
+        .dropdown-menu { @apply absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50 opacity-0 invisible transition-all transform scale-95 origin-top-right; }
+        .dropdown-menu.show { @apply opacity-100 visible scale-100; }
+    </style>
+
+    <!-- ANIMATION DES FLUX -->
+    <style>
+        @keyframes dash-flow {
+            to { stroke-dashoffset: -20; }
+        }
+        .flow-line-appro { animation: dash-flow 1.5s linear infinite; }
+        .flow-line-distrib { animation: dash-flow 1s linear infinite; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <header class="bg-gpsDark shadow-md sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-4 py-5 flex items-center gap-4">
-            <div class="bg-white/10 p-3 rounded-full shrink-0">
-                <i class="ph ph-leaf text-3xl text-gpsLight"></i>
-            </div>
-            <div>
-                <h1 class="text-xl md:text-3xl text-white leading-none">Comprendre le réseau des solidarités alimentaires</h1>
-                <p class="text-xs md:text-sm text-green-100 mt-1 font-georgia italic opacity-90">Grand Paris Sud, une étude pour mesurer les attentes et pertinences d'un outil mobile de transformation à vocation des acteurs des solidarités alimentaires.</p>
-            </div>
-        </div>
-        <div class="bg-white shadow-sm border-b border-gray-200">
-            <div class="max-w-5xl mx-auto px-4 flex">
-                <div class="nav-tab border-gpsLight text-gpsDark bg-green-50/30" id="tab-formulaire" onclick="switchTab('formulaire')">
-                    <i class="ph ph-list-checks text-xl"></i> <span class="hidden sm:inline">1. Formulaire</span><span class="sm:hidden">1. Form</span>
+    <header class="bg-gpsDark shadow-md sticky top-0 z-[9999]">
+        <div class="max-w-6xl mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-4 text-center sm:text-left">
+                <div class="bg-white/10 p-3 rounded-full shrink-0 hidden sm:block">
+                    <i class="ph ph-leaf text-3xl text-gpsLight"></i>
                 </div>
-                <div class="nav-tab border-transparent text-gray-400 hover:text-gray-600 hover:bg-gray-50" id="tab-carte" onclick="switchTab('carte')">
-                    <i class="ph ph-map-trifold text-xl"></i> <span class="hidden sm:inline">2. Carte des Flux</span><span class="sm:hidden">2. Carte</span>
+                <div>
+                    <h1 class="text-xl md:text-3xl text-white leading-none">Comprendre le réseau des solidarités alimentaires</h1>
+                    <p class="text-xs md:text-sm text-green-100 mt-1 font-georgia italic opacity-90">Grand Paris Sud, une étude pour mesurer les attentes et pertinences d'un outil mobile de transformation à vocation des acteurs des solidarités alimentaires.</p>
+                </div>
+            </div>
+            
+            <a href="https://pierrealainmory-hue.github.io/GPS_OMT/AnnuaireAA.html" target="_blank" rel="noopener noreferrer" class="bg-white/10 hover:bg-white/20 text-white font-oswald text-sm px-5 py-2.5 rounded-lg border border-white/20 transition-all flex items-center gap-2 uppercase tracking-wide">
+                <i class="ph ph-map-pin-line text-lg text-gpsLight"></i> Accéder à l'annuaire
+            </a>
+        </div>
+        
+        <div class="bg-white shadow-sm border-b border-gray-200">
+            <div class="max-w-6xl mx-auto px-4 flex">
+                <div class="nav-tab border-gpsLight text-gpsDark bg-green-50/30" id="tab-formulaire" onclick="switchTab('formulaire')">
+                    <i class="ph ph-list-checks text-xl"></i> <span class="hidden sm:inline">1. Formulaire</span><span class="sm:hidden">1. Formulaire</span>
+                </div>
+                <div class="nav-tab border-transparent text-gray-400 hover:text-gray-600 hover:bg-gray-50" id="tab-flux" onclick="switchTab('flux')">
+                    <i class="ph ph-map-trifold text-xl"></i> <span class="hidden sm:inline">2. Carte des Flux</span><span class="sm:hidden">2. Flux</span>
                 </div>
                 <div class="nav-tab border-transparent text-gray-400 hover:text-gray-600 hover:bg-gray-50" id="tab-idees" onclick="switchTab('idees')">
-                    <i class="ph ph-lightbulb text-xl"></i> <span class="hidden sm:inline">3. Piste de réflexion</span><span class="sm:hidden">3. Piste</span>
+                    <i class="ph ph-lightbulb text-xl"></i> <span class="hidden sm:inline">3. Pistes de réflexion</span><span class="sm:hidden">3. Pistes</span>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="flex-grow max-w-5xl mx-auto px-4 py-10 w-full">
+    <main class="flex-grow max-w-6xl mx-auto px-4 py-10 w-full">
         
+        <!-- ============================================== -->
+        <!-- ONGLET 1 : FORMULAIRE COMPLET                  -->
+        <!-- ============================================== -->
         <div id="vue-formulaire" class="animate-[fadeIn_0.5s_ease-in-out]">
-            <form id="enqueteOMT" class="space-y-10">
+            <form id="enqueteOMT" class="space-y-10 max-w-5xl mx-auto">
 
                 <section class="section-container">
                     <div class="flex items-center gap-4 mb-2">
@@ -326,7 +351,7 @@
                     </div>
                     <p class="text-sm text-gray-600 mb-8 italic border-b border-gray-200 pb-4 relative z-10">L'agglomération étudie la création d'outils logistiques partagés. <strong>Ces pistes s'inspirent d'initiatives observées sur d'autres territoires.</strong> Qu'en pensez-vous ?</p>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 relative z-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6 relative z-10">
                         
                         <div class="border border-gray-200 rounded-2xl shadow-sm flex flex-col overflow-hidden hover:border-gpsLight transition-colors group bg-white">
                             <div class="bg-gpsDark p-5 text-white text-center flex flex-col items-center">
@@ -420,6 +445,8 @@
                     </div>
                 </section>
 
+                <input type="hidden" name="produits_liste" id="produits_liste">
+
                 <div class="text-center pt-4 pb-12">
                     <button type="submit" id="submitBtn" class="btn-primary w-full md:w-auto mx-auto group">
                         <span>Transmettre ma contribution</span>
@@ -429,100 +456,66 @@
             </form>
         </div>
         
-        <div id="vue-carte" class="hidden animate-[fadeIn_0.5s_ease-in-out]">
-            <section class="mb-14">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="bg-gpsDark p-3 rounded-full text-white"><i class="ph ph-globe-hemisphere-west text-3xl"></i></div>
-                    <h2 class="text-3xl m-0 text-gpsDark">Cartographie des flux</h2>
+        <!-- ============================================== -->
+        <!-- ONGLET 2 : CARTE DES FLUX CONNECTÉE            -->
+        <!-- ============================================== -->
+        <div id="vue-flux" class="hidden animate-[fadeIn_0.5s_ease-in-out]">
+            <div class="mb-8 flex justify-between items-end border-b pb-4">
+                <div>
+                    <h2 class="text-2xl mb-1 flex items-center gap-3"><i class="ph ph-map-trifold text-3xl text-gpsLight"></i> Cartographie Logistique du Territoire</h2>
+                    <p class="text-gray-600 italic">Données simulées depuis le Google Sheet. Cliquez sur les repères pour afficher les détails.</p>
                 </div>
-                <p class="text-gray-600 mb-6 italic">Visualisez les synergies et les flux logistiques (approvisionnement et distribution) entre les différents acteurs du territoire. <span class="text-xs text-gray-400">(Données illustratives)</span></p>
+                <div class="hidden md:flex items-center gap-2 bg-green-50 text-gpsLight px-4 py-2 rounded-lg text-sm font-bold border border-green-200">
+                    <i class="ph-fill ph-check-circle"></i> Connecté au GSheet
+                </div>
+            </div>
+            
+            <div class="bg-white p-2 rounded-xl shadow-md border border-gray-200 h-[600px] relative">
+                <div id="mapFlux" class="w-full h-full rounded-lg z-0"></div>
                 
-                <!-- Carte globale -->
-                <div id="globalMap" class="w-full h-[550px] bg-gray-200 border-2 border-gray-300 rounded-2xl shadow-inner z-0 relative"></div>
-            </section>
+                <div class="absolute top-4 right-4 bg-white/95 p-5 rounded-xl shadow-lg border border-gray-200 z-[400] text-sm backdrop-blur">
+                    <h4 class="font-oswald text-gpsDark mb-3 border-b pb-2 uppercase tracking-wide">Légende</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3"><div class="bg-gpsDark w-6 h-6 rounded-full flex items-center justify-center text-white"><i class="ph-fill ph-warehouse text-xs"></i></div> <span class="font-bold text-gray-700">Locaux / Stockage</span></div>
+                        <div class="flex items-center gap-3"><div class="bg-blue-500 w-6 h-6 rounded-full flex items-center justify-center text-white"><i class="ph-fill ph-users-three text-xs"></i></div> <span class="font-bold text-gray-700">Zones de distribution</span></div>
+                        <div class="flex items-center gap-3"><div class="bg-orange-500 w-6 h-6 rounded-full flex items-center justify-center text-white"><i class="ph-fill ph-truck text-xs"></i></div> <span class="font-bold text-gray-700">Fournisseurs</span></div>
+                        
+                        <div class="border-t border-gray-200 pt-3 mt-3 space-y-3">
+                            <div class="flex items-center gap-3">
+                                <svg width="40" height="10"><line x1="0" y1="5" x2="40" y2="5" stroke="#f97316" stroke-width="4" stroke-dasharray="6 6" class="flow-line-appro"/></svg>
+                                <span class="text-xs font-bold text-gray-600 uppercase">Approvisionnement</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <svg width="40" height="10"><line x1="0" y1="5" x2="40" y2="5" stroke="#3b82f6" stroke-width="4" stroke-dasharray="6 6" class="flow-line-distrib"/></svg>
+                                <span class="text-xs font-bold text-gray-600 uppercase">Distribution</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
+        <!-- ============================================== -->
+        <!-- ONGLET 3 : PISTES DE RÉFLEXIONS                -->
+        <!-- ============================================== -->
         <div id="vue-idees" class="hidden animate-[fadeIn_0.5s_ease-in-out]">
-            <section class="pb-12">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center gap-4">
-                        <div class="bg-gpsLight p-3 rounded-full text-white"><i class="ph ph-lightbulb text-3xl"></i></div>
-                        <h2 class="text-3xl m-0 text-gpsDark">Piste de réflexion</h2>
-                    </div>
-                    <div class="hidden md:flex gap-2 text-sm">
-                        <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full font-bold"><i class="ph ph-funnel"></i> Tout</span>
-                        <span class="bg-white border border-gray-200 text-gray-500 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-50">Logistique</span>
-                        <span class="bg-white border border-gray-200 text-gray-500 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-50">Approvisionnement</span>
-                    </div>
+            <div class="mb-8 flex flex-col md:flex-row justify-between items-center border-b border-gray-200 pb-4">
+                <div>
+                    <h2 class="text-2xl flex items-center gap-3 mb-1"><i class="ph-fill ph-lightbulb text-3xl text-gpsLight"></i> 3. Pistes de réflexion mutualisables</h2>
+                    <p class="text-gray-600 italic">Cet espace collectif consolide les idées issues du terrain (Bloc D) pour les soumettre au vote de tous les acteurs locaux.</p>
                 </div>
-                
-                <p class="text-gray-600 mb-8 italic border-b border-gray-200 pb-4">Découvrez et soutenez les propositions d'outils et de moyens mutualisés soumises par les autres acteurs du territoire.</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-                    
-                    <!-- Idée 1 -->
-                    <div class="bg-white border-2 border-gray-100 rounded-2xl p-6 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.05)] flex flex-col hover:border-gpsLight hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-green-50 to-transparent z-0"></div>
-                        <div class="relative z-10 flex-1">
-                            <span class="bg-green-100 text-gpsDark text-[10px] px-3 py-1 rounded-full uppercase font-bold tracking-wider mb-3 inline-block shadow-sm">Transformation</span>
-                            <h4 class="text-lg text-gpsDark mb-3 font-oswald uppercase leading-tight group-hover:text-gpsLight transition-colors">Food-truck solidaire mutualisé</h4>
-                            <p class="text-sm text-gray-600 mb-4 font-georgia italic">"Un food-truck solidaire mutualisé pour « aller vers » les publics isolés et en situation de précarité."</p>
-                        </div>
-                        <div class="flex justify-between items-center pt-4 border-t border-gray-100 relative z-10">
-                            <div class="flex items-center gap-2">
-                                <div class="w-8 h-8 rounded-full bg-gpsDark text-white flex items-center justify-center text-xs font-bold">RC</div>
-                                <span class="text-xs text-gray-500 font-bold">Restos du Cœur</span>
-                            </div>
-                            <button type="button" onclick="toggleLike(this)" class="flex items-center gap-1.5 text-gray-400 hover:text-red-500 transition-colors bg-white px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm hover:shadow active:scale-95">
-                                <i class="ph ph-heart text-lg"></i> <span class="text-sm font-bold">12</span>
-                            </button>
-                        </div>
-                    </div>
+                <button class="bg-gpsDark text-white px-5 py-2.5 rounded-lg font-oswald text-sm uppercase mt-4 md:mt-0 shadow-sm hover:bg-gray-800 transition-colors flex items-center gap-2"><i class="ph ph-plus text-lg"></i> Suggérer une piste</button>
+            </div>
 
-                    <!-- Idée 2 -->
-                    <div class="bg-white border-2 border-gray-100 rounded-2xl p-6 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.05)] flex flex-col hover:border-gpsLight hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-blue-50 to-transparent z-0"></div>
-                        <div class="relative z-10 flex-1">
-                            <span class="bg-blue-100 text-blue-800 text-[10px] px-3 py-1 rounded-full uppercase font-bold tracking-wider mb-3 inline-block shadow-sm">Réseau</span>
-                            <h4 class="text-lg text-gpsDark mb-3 font-oswald uppercase leading-tight group-hover:text-blue-600 transition-colors">Bourse aux denrées locales</h4>
-                            <p class="text-sm text-gray-600 mb-4 font-georgia italic">"Création d'une plateforme ou d'un outil de bourse aux denrées locales pour faciliter l'échange de surplus entre nos différentes structures."</p>
-                        </div>
-                        <div class="flex justify-between items-center pt-4 border-t border-gray-100 relative z-10">
-                            <div class="flex items-center gap-2">
-                                <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold">CR</div>
-                                <span class="text-xs text-gray-500 font-bold">Croix-Rouge</span>
-                            </div>
-                            <button type="button" onclick="toggleLike(this)" class="flex items-center gap-1.5 text-gray-400 hover:text-red-500 transition-colors bg-white px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm hover:shadow active:scale-95">
-                                <i class="ph ph-heart text-lg"></i> <span class="text-sm font-bold">8</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Idée 3 -->
-                    <div class="bg-white border-2 border-gray-100 rounded-2xl p-6 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.05)] flex flex-col hover:border-gpsLight hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-orange-50 to-transparent z-0"></div>
-                        <div class="relative z-10 flex-1">
-                            <span class="bg-orange-100 text-orange-800 text-[10px] px-3 py-1 rounded-full uppercase font-bold tracking-wider mb-3 inline-block shadow-sm">Logistique</span>
-                            <h4 class="text-lg text-gpsDark mb-3 font-oswald uppercase leading-tight group-hover:text-orange-500 transition-colors">Navettes agricoles</h4>
-                            <p class="text-sm text-gray-600 mb-4 font-georgia italic">"Mise en place de navettes agricoles logistiques, similaires aux actions d'une structure comme SOLAAL, pour récupérer les produits directement à la ferme."</p>
-                        </div>
-                        <div class="flex justify-between items-center pt-4 border-t border-gray-100 relative z-10">
-                            <div class="flex items-center gap-2">
-                                <div class="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center text-xs font-bold">SP</div>
-                                <span class="text-xs text-gray-500 font-bold">Secours Populaire</span>
-                            </div>
-                            <button type="button" onclick="toggleLike(this)" class="flex items-center gap-1.5 text-gray-400 hover:text-red-500 transition-colors bg-white px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm hover:shadow active:scale-95">
-                                <i class="ph ph-heart text-lg"></i> <span class="text-sm font-bold">24</span>
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
+            <!-- Conteneur généré dynamiquement -->
+            <div id="pistes-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Les cartes seront injectées ici par Javascript -->
+            </div>
         </div>
+
     </main>
 
-    <div id="successModal" class="hidden fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] flex items-center justify-center px-4 transition-opacity">
+    <div id="successModal" class="hidden fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[10000] flex items-center justify-center px-4 transition-opacity">
         <div class="bg-white rounded-3xl p-10 max-w-md w-full text-center shadow-2xl animate-[fadeIn_0.3s_ease-in-out] transform scale-100">
             <i class="ph-fill ph-check-circle text-[80px] text-gpsLight mb-4 drop-shadow-sm"></i>
             <h3 class="text-3xl font-oswald text-gpsDark mb-3">Merci beaucoup !</h3>
@@ -531,125 +524,138 @@
         </div>
     </div>
 
+    <!-- Nouveau Footer Officiel -->
+    <footer class="bg-white border-t border-slate-200 mt-auto py-6 relative z-40">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+            <!-- Logos -->
+            <div class="flex items-center gap-6 shrink-0">
+                <!-- Logo Grand Paris Sud -->
+                <a href="https://www.grandparissud.fr/" target="_blank" class="hover:opacity-80 transition" title="Visiter le site de Grand Paris Sud">
+                    <img src="https://upload.wikimedia.org/wikipedia/fr/5/5a/Grand_Paris_Sud_logo.svg" alt="Logo Grand Paris Sud" class="h-12 object-contain">
+                </a>
+
+                <div class="w-px h-10 bg-slate-300 hidden sm:block"></div>
+                
+                <a href="https://www.dix-autrement.fr/" target="_blank" class="hover:opacity-80 transition" title="Visiter le site de DIX Solutions">
+                    <img src="https://github.com/pierrealainmory-hue/logistique-data-projet/blob/main/logo%20dix%20solutions.jpg?raw=true" alt="Logo DIX Solutions" class="h-12 object-contain">
+                </a>
+            </div>
+            
+            <!-- Mentions légales -->
+            <div class="text-xs text-slate-500 leading-relaxed md:text-right">
+                <strong class="text-slate-700">&copy; 2026 DIX - La Coopérative des Transitions Agricoles et Alimentaires des Territoires. Tous droits réservés.</strong><br>
+                Entreprise de l'Économie Sociale et Solidaire (ESS) - SAS au SIREN 830 937 710 | Siège social : 6 Grande Rue, 77320 Chartronges<br>
+                Plateforme expérimentale conçue et propulsée pour l'agglomération Grand Paris Sud.<br>
+                <span class="mt-1 block">
+                    Contact : <a href="mailto:contact@dix-autrement.fr" class="text-gpsLight font-bold hover:underline">contact@dix-autrement.fr</a> - 
+                    Web : <a href="https://www.dix-autrement.fr/" target="_blank" class="text-gpsLight font-bold hover:underline">www.dix-autrement.fr</a>
+                </span>
+            </div>
+        </div>
+    </footer>
+
     <script>
-        let globalMapInitialized = false;
-        let globalMap = null;
+        // ==========================================
+        // MOCK DATABASE (Simulation Google Sheets)
+        // Basé sur le CSV fourni, avec ajout d'une classification pour les pistes ouvertes
+        // ==========================================
+        const mockGSData = [
+            {
+                structure: "Association Solidarité Evry",
+                ville: "Sainte-Geneviève-des-Bois",
+                local: { lat: 48.600225, lng: 2.450637 },
+                distribs: [
+                    {nom: "Avenue de la Croix Blanche", lat: 48.621562, lng: 2.345581},
+                    {nom: "D 331 Tigery", lat: 48.639714, lng: 2.494583},
+                    {nom: "Route d'Arvigny Réau", lat: 48.600679, lng: 2.588653}
+                ],
+                fournisseurs: [
+                    {nom: "Banque Alimentaire", lat: 48.672372, lng: 2.252197, address: "Allée des Bois"},
+                    {nom: "Supermarché Local", lat: 48.671012, lng: 2.549514, address: "Rue de Vaux la Reine"}
+                ],
+                pisteOuverte: ""
+            },
+            {
+                structure: "Croix Rouge Val d'Yerres",
+                ville: "Villecresnes",
+                local: { lat: 48.718149, lng: 2.305755 },
+                distribs: [
+                    {nom: "Rue de Cerçay", lat: 48.715430, lng: 2.527542}
+                ],
+                fournisseurs: [
+                    {nom: "Marché de Rungis", lat: 48.767957, lng: 2.347640, address: "Avenue de la Villette"},
+                    {nom: "Ferme partenaire", lat: 48.789223, lng: 2.539215, address: "Ormesson-sur-Marne"}
+                ],
+                pisteOuverte: ""
+            },
+            {
+                structure: "Secours Populaire Pringy",
+                ville: "Pringy",
+                local: { lat: 48.676453, lng: 2.304382 },
+                distribs: [
+                    {nom: "Avenue Madeleine Brunoy", lat: 48.689600, lng: 2.487716},
+                    {nom: "Rue d'Orgenoy", lat: 48.512965, lng: 2.562561},
+                    {nom: "Sivry-Courtry", lat: 48.545705, lng: 2.754821}
+                ],
+                fournisseurs: [
+                    {nom: "Grossiste Trappes", lat: 48.750756, lng: 1.994018, address: "Route Forestière"},
+                    {nom: "Producteur Noisiel", lat: 48.852065, lng: 2.628479, address: "Rue Kennedy"}
+                ],
+                pisteOuverte: "Mettre en place un système de navettes mutualisées pour aller chercher les dons chez les agriculteurs éloignés.",
+                pisteTheme: "Logistique / Transport",
+                pisteTitre: "Navettes Agricoles"
+            },
+            {
+                structure: "Restos du Coeur Savigny",
+                ville: "Savigny-le-Temple",
+                local: { lat: 48.613845, lng: 2.335968 },
+                distribs: [
+                    {nom: "Sentier des Charmilles", lat: 48.601360, lng: 2.569427},
+                    {nom: "Rue de Villeroy Bondoufle", lat: 48.608624, lng: 2.374763}
+                ],
+                fournisseurs: [
+                    {nom: "Centrale d'achat", lat: 48.638807, lng: 2.434844, address: "Avenue de la Liberté Évry"},
+                    {nom: "Dépôt Combs", lat: 48.661716, lng: 2.539901, address: "Combs-la-Ville"}
+                ],
+                pisteOuverte: "Création d'un groupe de messagerie (WhatsApp/Telegram) entre associations pour donner les surplus frais du jour même.",
+                pisteTheme: "Outil Numérique",
+                pisteTitre: "Groupe Alerte Surplus"
+            }
+        ];
 
         function switchTab(t) {
             document.getElementById('vue-formulaire').classList.toggle('hidden', t!=='formulaire');
-            document.getElementById('vue-carte').classList.toggle('hidden', t!=='carte');
+            document.getElementById('vue-flux').classList.toggle('hidden', t!=='flux');
             document.getElementById('vue-idees').classList.toggle('hidden', t!=='idees');
             
-            ['formulaire', 'carte', 'idees'].forEach(tab => {
+            ['formulaire', 'flux', 'idees'].forEach(tab => {
                 const el = document.getElementById('tab-' + tab);
-                if(t === tab) {
+                if (t === tab) {
                     el.className = "nav-tab border-gpsLight text-gpsDark bg-green-50/30";
                 } else {
                     el.className = "nav-tab border-transparent text-gray-400 hover:text-gray-600 hover:bg-gray-50";
                 }
             });
             
-            if(t === 'formulaire') {
-                setTimeout(() => { if(map) map.invalidateSize(); }, 100); 
-            } else if(t === 'carte') {
-                if (!globalMapInitialized) {
-                    initGlobalMap();
-                }
-                setTimeout(() => { if(globalMap) globalMap.invalidateSize(); }, 100);
-            }
+            if(t === 'formulaire') setTimeout(() => map.invalidateSize(), 100); 
+            if(t === 'flux') setTimeout(() => { initFluxMap(); mapFlux.invalidateSize(); }, 100);
+            if(t === 'idees') renderPistes();
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function initGlobalMap() {
-            globalMap = L.map('globalMap').setView([48.625, 2.438], 12);
-            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-                maxZoom: 17,
-                attribution: '&copy; <a href="https://www.esri.com/">Esri</a>'
-            }).addTo(globalMap);
-            
-            var legendGlobal = L.control({position: 'bottomright'});
-            legendGlobal.onAdd = function () {
-                var div = L.DomUtil.create('div', 'bg-white/90 backdrop-blur p-3 rounded-xl shadow-sm border border-gray-200 text-xs font-georgia pointer-events-none');
-                div.innerHTML = `
-                    <div class="flex items-center gap-2 mb-1.5"><div class="bg-gpsDark text-white p-1 rounded-full"><i class="ph-fill ph-warehouse text-sm"></i></div> <span class="font-bold text-gray-700">Local Partagé</span></div>
-                    <div class="flex items-center gap-2 mb-1.5"><div class="bg-blue-500 text-white p-1 rounded-full"><i class="ph-fill ph-users-three text-sm"></i></div> <span class="font-bold text-gray-700">Distribution</span></div>
-                    <div class="flex items-center gap-2 mb-2"><div class="bg-orange-500 text-white p-1 rounded-full"><i class="ph-fill ph-truck text-sm"></i></div> <span class="font-bold text-gray-700">Fournisseur</span></div>
-                    <div class="border-t border-gray-200 pt-2 flex flex-col gap-1">
-                        <div class="flex items-center gap-2"><div class="w-6 h-0.5 border-t-2 border-dashed border-orange-500"></div> <span class="italic text-gray-500">Approvisionnement</span></div>
-                        <div class="flex items-center gap-2"><div class="w-6 h-0.5 border-t-2 border-dashed border-blue-500"></div> <span class="italic text-gray-500">Redistribution</span></div>
-                    </div>
-                `;
-                return div;
-            };
-            legendGlobal.addTo(globalMap);
-            
-            let pStock = [48.625, 2.438];
-            let pDist1 = [48.605, 2.470];
-            let pDist2 = [48.615, 2.400];
-            let pFourn = [48.650, 2.400];
-
-            // Tracé des flux (lignes) pour la carte globale
-            L.polyline([pFourn, pStock], {color: '#f97316', weight: 3, dashArray: '5, 10', opacity: 0.8}).addTo(globalMap);
-            L.polyline([pStock, pDist1], {color: '#3b82f6', weight: 3, dashArray: '5, 10', opacity: 0.8}).addTo(globalMap);
-            L.polyline([pStock, pDist2], {color: '#3b82f6', weight: 3, dashArray: '5, 10', opacity: 0.8}).addTo(globalMap);
-
-            L.marker(pStock, {icon: iStock}).addTo(globalMap).bindPopup("<div class='font-georgia'><p class='font-bold text-gpsDark mb-1 font-oswald uppercase text-sm'>Local Partagé envisagé</p><p class='text-sm text-gray-700'>Évry-Courcouronnes</p></div>");
-            L.marker(pDist1, {icon: iDist}).addTo(globalMap).bindPopup("<div class='font-georgia'><p class='font-bold text-blue-600 mb-1 font-oswald uppercase text-sm'>Zone de distribution</p><p class='text-sm text-gray-700'>Corbeil-Essonnes</p></div>");
-            L.marker(pDist2, {icon: iDist}).addTo(globalMap).bindPopup("<div class='font-georgia'><p class='font-bold text-blue-600 mb-1 font-oswald uppercase text-sm'>Zone de distribution</p><p class='text-sm text-gray-700'>Ris-Orangis</p></div>");
-            L.marker(pFourn, {icon: iFourn}).addTo(globalMap).bindPopup("<div class='font-georgia'><p class='font-bold text-orange-500 mb-1 font-oswald uppercase text-sm'>Fournisseur agricole</p><p class='text-sm text-gray-700'>Bondoufle</p></div>");
-
-            globalMapInitialized = true;
-        }
-
-        // Fonction pour animer et compter les clics sur les coeurs de la Piste de réflexion
-        window.toggleLike = function(btn) {
-            const icon = btn.querySelector('i');
-            const countSpan = btn.querySelector('span');
-            let count = parseInt(countSpan.innerText);
-            
-            if (icon.classList.contains('ph-fill')) {
-                // Unlike
-                icon.classList.remove('ph-fill', 'text-red-500');
-                icon.classList.add('ph');
-                countSpan.innerText = count - 1;
-            } else {
-                // Like
-                icon.classList.remove('ph');
-                icon.classList.add('ph-fill', 'text-red-500');
-                countSpan.innerText = count + 1;
-            }
-        };
-
-        /* Initializing Leaflet map with ESRI tiles (No API key needed) */
         var map = L.map('mainMap').setView([48.625, 2.438], 11);
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
             maxZoom: 17,
             attribution: '&copy; <a href="https://www.esri.com/">Esri</a>'
         }).addTo(map);
 
-        // Ajout d'une légende sur la carte principale
-        var legendMain = L.control({position: 'bottomright'});
-        legendMain.onAdd = function () {
-            var div = L.DomUtil.create('div', 'bg-white/90 backdrop-blur p-3 rounded-xl shadow-sm border border-gray-200 text-xs font-georgia pointer-events-none');
-            div.innerHTML = `
-                <div class="flex items-center gap-2 mb-1.5"><div class="bg-gpsDark text-white p-1 rounded-full"><i class="ph-fill ph-warehouse text-sm"></i></div> <span class="font-bold text-gray-700">Local</span></div>
-                <div class="flex items-center gap-2 mb-1.5"><div class="bg-blue-500 text-white p-1 rounded-full"><i class="ph-fill ph-users-three text-sm"></i></div> <span class="font-bold text-gray-700">Distribution</span></div>
-                <div class="flex items-center gap-2"><div class="bg-orange-500 text-white p-1 rounded-full"><i class="ph-fill ph-truck text-sm"></i></div> <span class="font-bold text-gray-700">Fournisseur</span></div>
-            `;
-            return div;
-        };
-        legendMain.addTo(map);
-
-        // Ajout d'une couche pour dessiner les flux dynamiquement
-        window.flowLayers = L.layerGroup().addTo(map);
-
         let currentMapMode = 'stockage';
         let markers = { stockage: null, distrib: [], fournisseur: [] };
-        window.tempMarkers = {};
         
-        const iStock = L.divIcon({ html: '<div class="bg-gpsDark text-white p-2 rounded-full border-2 border-white shadow-lg flex items-center justify-center"><i class="ph-fill ph-warehouse text-2xl"></i></div>', className: 'bg-transparent', iconSize:[40,40], iconAnchor:[20,20], popupAnchor:[0,-20] });
-        const iDist = L.divIcon({ html: '<div class="bg-blue-500 text-white p-2 rounded-full border-2 border-white shadow-lg flex items-center justify-center"><i class="ph-fill ph-users-three text-xl"></i></div>', className: 'bg-transparent', iconSize:[36,36], iconAnchor:[18,18], popupAnchor:[0,-18] });
-        const iFourn = L.divIcon({ html: '<div class="bg-orange-500 text-white p-2 rounded-full border-2 border-white shadow-lg flex items-center justify-center"><i class="ph-fill ph-truck text-xl"></i></div>', className: 'bg-transparent', iconSize:[36,36], iconAnchor:[18,18], popupAnchor:[0,-18] });
+        const iStockForm = L.divIcon({ html: '<div class="bg-gpsDark text-white p-2 rounded-full border-2 border-white shadow-lg flex items-center justify-center"><i class="ph-fill ph-warehouse text-2xl"></i></div>', className: 'bg-transparent', iconSize:[40,40], iconAnchor:[20,20], popupAnchor:[0,-20] });
+        const iDistForm = L.divIcon({ html: '<div class="bg-blue-500 text-white p-2 rounded-full border-2 border-white shadow-lg flex items-center justify-center"><i class="ph-fill ph-users-three text-xl"></i></div>', className: 'bg-transparent', iconSize:[36,36], iconAnchor:[18,18], popupAnchor:[0,-18] });
+        const iFournForm = L.divIcon({ html: '<div class="bg-orange-500 text-white p-2 rounded-full border-2 border-white shadow-lg flex items-center justify-center"><i class="ph-fill ph-truck text-xl"></i></div>', className: 'bg-transparent', iconSize:[36,36], iconAnchor:[18,18], popupAnchor:[0,-18] });
 
         window.setMapMode = function(mode) {
             currentMapMode = mode;
@@ -701,80 +707,42 @@
             
             if(currentMapMode === 'stockage') {
                 if(markers.stockage) map.removeLayer(markers.stockage.marker);
-                let marker = L.marker(e.latlng, {icon: iStock}).addTo(map);
-                markers.stockage = { marker: marker, lat: lat, lng: lng, address: "Recherche en cours..." };
-                marker.bindPopup("<div class='p-2 font-georgia text-sm text-center text-gray-500'><i class='ph ph-spinner animate-spin text-lg mb-1'></i><br>Recherche de l'adresse...</div>").openPopup();
-
+                markers.stockage = { marker: L.marker(e.latlng, {icon: iStockForm}).addTo(map), lat: lat, lng: lng, address: "Recherche en cours..." };
                 let addr = await getAddressFromCoords(lat, lng);
                 markers.stockage.address = addr;
-                marker.setPopupContent(`<div class="p-1 font-georgia"><p class="font-bold text-gpsDark mb-1 font-oswald uppercase text-sm">Local principal</p><p class="text-sm text-gray-700">${addr}</p></div>`);
                 updateRecap();
-                drawDynamicFlows();
             } else if(currentMapMode === 'distrib') {
                 let addr = await getAddressFromCoords(lat, lng);
-                let marker = L.marker(e.latlng, {icon: iDist}).addTo(map);
-                let mId = Date.now();
-                window.tempMarkers[mId] = marker;
-
-                let popupHtml = `<div class="p-1 w-56 font-georgia">
+                let popupHtml = `<div class="p-1 w-56 font-georgia m-2">
                     <p class="font-bold text-blue-600 mb-2 font-oswald uppercase text-sm">Zone de distribution</p>
-                    <input type="text" id="idist-${mId}" value="${addr.replace(/'/g, "&apos;")}" class="w-full border border-gray-300 rounded p-2 mb-3 text-sm focus:outline-none focus:border-blue-500">
-                    <button type="button" onclick="saveDist(${lat},${lng}, ${mId})" class="bg-blue-500 hover:bg-blue-600 text-white font-bold px-3 py-2 rounded text-sm w-full transition-colors">Valider ce point</button>
+                    <input type="text" id="idist" value="${addr}" class="w-full border border-gray-300 rounded p-2 mb-3 text-sm focus:outline-none focus:border-blue-500">
+                    <button type="button" onclick="saveDist(${lat},${lng})" class="bg-blue-500 hover:bg-blue-600 text-white font-bold px-3 py-2 rounded text-sm w-full transition-colors">Valider ce point</button>
                 </div>`;
-                marker.bindPopup(popupHtml, {closeButton: false}).openPopup();
+                L.marker(e.latlng, {icon: iDistForm}).addTo(map).bindPopup(popupHtml, {closeButton: false}).openPopup();
             } else {
                 let addr = await getAddressFromCoords(lat, lng);
-                let marker = L.marker(e.latlng, {icon: iFourn}).addTo(map);
-                let mId = Date.now();
-                window.tempMarkers[mId] = marker;
-
-                let popupHtml = `<div class="p-1 w-56 font-georgia">
+                let popupHtml = `<div class="p-1 w-56 font-georgia m-2">
                     <p class="font-bold text-orange-500 mb-2 font-oswald uppercase text-sm">Fournisseur</p>
-                    <input type="text" id="ifourn-${mId}" placeholder="Nom du fournisseur" class="w-full border border-gray-300 rounded p-2 mb-3 text-sm focus:outline-none focus:border-orange-500">
-                    <button type="button" onclick="saveFourn(${lat},${lng}, '${addr.replace(/'/g, "\\'")}', ${mId})" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-3 py-2 rounded text-sm w-full transition-colors">Valider ce fournisseur</button>
+                    <input type="text" id="ifourn" placeholder="Nom du fournisseur" class="w-full border border-gray-300 rounded p-2 mb-3 text-sm focus:outline-none focus:border-orange-500">
+                    <button type="button" onclick="saveFourn(${lat},${lng}, '${addr.replace(/'/g, "\\'")}')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-3 py-2 rounded text-sm w-full transition-colors">Valider ce fournisseur</button>
                 </div>`;
-                marker.bindPopup(popupHtml, {closeButton: false}).openPopup();
+                L.marker(e.latlng, {icon: iFournForm}).addTo(map).bindPopup(popupHtml, {closeButton: false}).openPopup();
             }
         });
 
-        window.saveDist = function(lat, lng, mId) {
-            let name = document.getElementById('idist-'+mId).value;
-            let marker = window.tempMarkers[mId];
-            markers.distrib.push({nom: name, lat: lat, lng: lng, marker: marker});
-            marker.setPopupContent(`<div class="p-1 font-georgia"><p class="font-bold text-blue-600 mb-1 font-oswald uppercase text-sm">Zone de distribution</p><p class="text-sm text-gray-700">${name}</p></div>`);
+        window.saveDist = function(lat, lng) {
+            let name = document.getElementById('idist').value;
+            markers.distrib.push({nom: name, lat: lat, lng: lng});
             map.closePopup(); 
             updateRecap();
-            drawDynamicFlows();
         };
 
-        window.saveFourn = function(lat, lng, addr, mId) {
-            let name = document.getElementById('ifourn-'+mId).value || "Fournisseur inconnu";
-            let marker = window.tempMarkers[mId];
-            markers.fournisseur.push({nom: name, lat: lat, lng: lng, address: addr, marker: marker});
-            marker.setPopupContent(`<div class="p-1 font-georgia"><p class="font-bold text-orange-500 mb-1 font-oswald uppercase text-sm">Fournisseur</p><p class="text-sm text-gray-700">${name}</p></div>`);
+        window.saveFourn = function(lat, lng, addr) {
+            let name = document.getElementById('ifourn').value || "Fournisseur inconnu";
+            markers.fournisseur.push({nom: name, lat: lat, lng: lng, address: addr});
             map.closePopup(); 
             updateRecap();
-            drawDynamicFlows();
         };
-
-        // Fonction pour dessiner les lignes de flux dynamiquement entre le local et les autres points
-        function drawDynamicFlows() {
-            window.flowLayers.clearLayers();
-            if(!markers.stockage) return;
-            
-            let sLat = markers.stockage.lat;
-            let sLng = markers.stockage.lng;
-
-            // Flux Local -> Distribution (Bleu)
-            markers.distrib.forEach(d => {
-                L.polyline([[sLat, sLng], [d.lat, d.lng]], {color: '#3b82f6', weight: 3, dashArray: '5, 8', opacity: 0.6}).addTo(window.flowLayers);
-            });
-
-            // Flux Fournisseur -> Local (Orange)
-            markers.fournisseur.forEach(f => {
-                L.polyline([[f.lat, f.lng], [sLat, sLng]], {color: '#f97316', weight: 3, dashArray: '5, 8', opacity: 0.6}).addTo(window.flowLayers);
-            });
-        }
 
         function updateRecap() {
             let h = '';
@@ -792,7 +760,6 @@
             
             document.getElementById('map-recap-list').innerHTML = h || '<li class="italic text-gray-400 bg-gray-50 p-2 rounded">Aucun repère placé pour le moment.</li>';
             
-            // Format arrays to JSON string for Google Sheets compatibility
             document.getElementById('data_distribution').value = JSON.stringify(markers.distrib);
             document.getElementById('data_fournisseurs').value = JSON.stringify(markers.fournisseur);
         }
@@ -809,52 +776,352 @@
             btn.innerHTML = '<i class="ph ph-spinner animate-spin text-xl"></i> <span>Envoi en cours...</span>';
             
             const formData = new FormData(form);
-
-            // Regrouper les checkboxes pour Google Sheets en une seule chaine
             const checkboxesProduits = document.querySelectorAll('input[name="produits"]:checked');
             const produitsSelectionnes = Array.from(checkboxesProduits).map(cb => cb.value);
             formData.delete('produits');
             formData.append('produits_liste', produitsSelectionnes.join(', '));
 
-            // EXACT Google Scripts App URL provided by user
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbyZEkooSyo13TPSNXPM0sE-5k-SyaZYkaofLUc6SZr6MXE0PH9HCCpwKGtG3CnPIxea/exec';
-
-            fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
-                .then(() => {
-                    document.getElementById('successModal').classList.remove('hidden');
-                    
-                    form.reset(); 
-                    
-                    document.getElementById('v9').innerText = '5 / 10';
-                    document.getElementById('vp1').innerText = '5/10';
-                    document.getElementById('vp2').innerText = '5/10';
-                    document.getElementById('rdv').classList.add('hidden');
-                    
-                    const champAutre = document.getElementById('champ-autre-produit');
-                    if(champAutre) champAutre.classList.add('hidden');
-                    
-                    markers = { stockage: null, distrib: [], fournisseur: [] };
-                    window.flowLayers.clearLayers();
-                    map.eachLayer(layer => {
-                        if (layer instanceof L.Marker) { map.removeLayer(layer); }
-                    });
-                    updateRecap();
-                    
-                    btn.disabled = false;
-                    btn.innerHTML = originalText;
-                })
-                .catch(error => {
-                    console.error('Erreur :', error.message);
-                    alert("Une erreur est survenue lors de l'enregistrement. Veuillez vérifier votre connexion.");
-                    btn.disabled = false;
-                    btn.innerHTML = originalText;
+            // Simule l'envoi pour cette maquette
+            setTimeout(() => {
+                document.getElementById('successModal').classList.remove('hidden');
+                
+                form.reset(); 
+                document.getElementById('v9').innerText = '5 / 10';
+                document.getElementById('vp1').innerText = '5/10';
+                document.getElementById('vp2').innerText = '5/10';
+                document.getElementById('vp3').innerText = '5/10';
+                document.getElementById('rdv').classList.add('hidden');
+                
+                const champAutre = document.getElementById('champ-autre-produit');
+                if(champAutre) champAutre.classList.add('hidden');
+                
+                markers = { stockage: null, distrib: [], fournisseur: [] };
+                map.eachLayer(layer => {
+                    if (layer instanceof L.Marker) { map.removeLayer(layer); }
                 });
+                updateRecap();
+                
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }, 1000);
         });
 
         window.closeModal = function() {
             document.getElementById('successModal').classList.add('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
+
+
+        // --- ICÔNES COMMUNES (Petites et Rondes) ---
+        const iStock = L.divIcon({ 
+            html: '<div class="bg-gpsDark text-white w-7 h-7 rounded-full border-2 border-white shadow flex items-center justify-center"><i class="ph-fill ph-warehouse text-sm"></i></div>', 
+            className: 'bg-transparent', iconSize:[28,28], iconAnchor:[14,14], popupAnchor:[0,-14] 
+        });
+        const iDist = L.divIcon({ 
+            html: '<div class="bg-blue-500 text-white w-6 h-6 rounded-full border-2 border-white shadow flex items-center justify-center"><i class="ph-fill ph-users-three text-xs"></i></div>', 
+            className: 'bg-transparent', iconSize:[24,24], iconAnchor:[12,12], popupAnchor:[0,-12] 
+        });
+        const iFourn = L.divIcon({ 
+            html: '<div class="bg-orange-500 text-white w-6 h-6 rounded-full border-2 border-white shadow flex items-center justify-center"><i class="ph-fill ph-truck text-xs"></i></div>', 
+            className: 'bg-transparent', iconSize:[24,24], iconAnchor:[12,12], popupAnchor:[0,-12] 
+        });
+
+        let mapFlux, fluxMapInitialized = false;
+        
+        function initFluxMap() {
+            if(fluxMapInitialized) return;
+            mapFlux = L.map('mapFlux').setView([48.625, 2.438], 11);
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 17 }).addTo(mapFlux);
+            
+            let bounds = L.latLngBounds();
+
+            // Génération dynamique depuis mockGSData
+            mockGSData.forEach(row => {
+                const locPoint = L.latLng(row.local.lat, row.local.lng);
+                bounds.extend(locPoint);
+
+                let locPopup = `<div class="p-4 w-64">
+                    <span class="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">Local Stockage</span>
+                    <h3 class="font-oswald text-gpsDark text-lg mb-1 leading-tight">${row.structure}</h3>
+                    <p class="text-sm font-georgia text-gray-600 mb-3"><i class="ph ph-map-pin text-gpsLight"></i> Ville : ${row.ville}</p>
+                    <div class="grid grid-cols-2 gap-2 text-center border-t border-gray-100 pt-2">
+                        <div class="bg-blue-50 p-1 rounded"><div class="text-blue-600 font-bold">${row.distribs.length}</div><div class="text-[10px] text-gray-500 uppercase">Zones</div></div>
+                        <div class="bg-orange-50 p-1 rounded"><div class="text-orange-600 font-bold">${row.fournisseurs.length}</div><div class="text-[10px] text-gray-500 uppercase">Fourn.</div></div>
+                    </div>
+                </div>`;
+                L.marker(locPoint, {icon: iStock}).addTo(mapFlux).bindPopup(locPopup);
+
+                row.fournisseurs.forEach(f => {
+                    const fPoint = L.latLng(f.lat, f.lng);
+                    bounds.extend(fPoint);
+                    
+                    let fPopup = `<div class="p-3 w-48">
+                        <span class="bg-orange-100 text-orange-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">Fournisseur</span>
+                        <h4 class="font-bold text-gray-800 text-sm mb-1">${f.nom}</h4>
+                        <p class="text-xs text-gray-500 mb-2">${f.address || 'Adresse inconnue'}</p>
+                        <p class="text-xs text-gpsDark border-t pt-1 italic">Livre : ${row.structure}</p>
+                    </div>`;
+                    L.marker(fPoint, {icon: iFourn}).addTo(mapFlux).bindPopup(fPopup);
+                    L.polyline([fPoint, locPoint], { color: '#f97316', weight: 3, dashArray: '6, 6', className: 'flow-line-appro', opacity: 0.6 }).addTo(mapFlux);
+                });
+
+                row.distribs.forEach(d => {
+                    const dPoint = L.latLng(d.lat, d.lng);
+                    bounds.extend(dPoint);
+                    
+                    let dPopup = `<div class="p-3 w-48">
+                        <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">Zone Distribution</span>
+                        <h4 class="font-bold text-gray-800 text-sm mb-1">${d.nom}</h4>
+                        <p class="text-xs text-gpsDark border-t pt-1 mt-2 italic">Approvisionné par : ${row.structure}</p>
+                    </div>`;
+                    L.marker(dPoint, {icon: iDist}).addTo(mapFlux).bindPopup(dPopup);
+                    L.polyline([locPoint, dPoint], { color: '#3b82f6', weight: 3, dashArray: '6, 6', className: 'flow-line-distrib', opacity: 0.6 }).addTo(mapFlux);
+                });
+            });
+
+            if(bounds.isValid()) { mapFlux.fitBounds(bounds, {padding: [50, 50]}); }
+            fluxMapInitialized = true;
+        }
+
+        let pistesRendered = false;
+
+        function renderPistes() {
+            if(pistesRendered) return;
+            const container = document.getElementById('pistes-container');
+            
+            // Cartes statiques issues de ton design + Cartes dynamiques du GS
+            let htmlContent = `
+                <!-- Carte 1 Statique -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 border-t-[6px] border-t-gpsLight flex flex-col p-6">
+                    <div class="flex justify-between items-start">
+                        <span class="bg-green-50 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Équipement mobile</span>
+                        <!-- Menu Dropdown ("...") -->
+                        <div class="relative">
+                            <button class="text-gray-400 hover:text-gray-700 p-1" onclick="toggleDropdown('menu-piste-1')"><i class="ph ph-dots-three text-2xl"></i></button>
+                            <div id="menu-piste-1" class="dropdown-menu">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"><i class="ph ph-share-network"></i> Partager</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"><i class="ph ph-flag text-orange-500"></i> Signaler</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-5 flex-grow">
+                        <h3 class="text-xl mb-3 font-oswald text-gray-800 uppercase tracking-wide">Camion-Cuisine partagé</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed mb-5">Un food-truck solidaire mutualisé pour "aller vers" les publics isolés et en situation de précarité.</p>
+                        <div class="bg-gray-50 rounded-xl p-3 text-sm text-gray-600 flex items-center gap-2 border border-gray-100">
+                            <i class="ph-fill ph-info text-gpsLight text-lg"></i> Issue de la proposition GPS (Bloc D)
+                        </div>
+                    </div>
+                    
+                    <!-- Bloc d'évaluation nuancée ajouté -->
+                    <div class="mt-4 mb-2 bg-gray-50 rounded-xl p-3 border border-gray-100">
+                        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 text-center">Évaluer la pertinence :</p>
+                        <div class="flex justify-center gap-2">
+                            <button class="vote-btn" onclick="vote(this, 'tres')" title="Très pertinent"><i class="ph ph-smiley text-lg"></i> <span class="vote-count">12</span></button>
+                            <button class="vote-btn" onclick="vote(this, 'plutot')" title="Plutôt pertinent"><i class="ph ph-smiley-meh text-lg"></i> <span class="vote-count">4</span></button>
+                            <button class="vote-btn" onclick="vote(this, 'pas')" title="Pas adapté"><i class="ph ph-smiley-sad text-lg"></i> <span class="vote-count">1</span></button>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center text-gray-500">
+                        <div class="flex gap-4">
+                            <button class="flex items-center gap-1.5 hover:text-blue-500 transition font-bold" onclick="toggleComments('comments-1')"><i class="ph ph-chat-circle text-xl"></i> 3</button>
+                        </div>
+                        <button class="border border-gray-200 rounded-lg px-5 py-1.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition">Détails</button>
+                    </div>
+
+                    <!-- Zone de commentaires -->
+                    <div id="comments-1" class="hidden mt-4 pt-4 border-t border-gray-100">
+                        <div class="space-y-3 mb-3">
+                            <div class="bg-gray-50 p-3 rounded-lg text-sm text-gray-600"><span class="font-bold text-gray-800 block mb-1">Assos'Solidarité</span>Excellente idée, nous manquons cruellement de locaux pour cuisiner.</div>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" class="form-input !p-2 !text-sm" placeholder="Votre commentaire...">
+                            <button class="bg-gpsDark text-white p-2 rounded-lg hover:bg-gray-800"><i class="ph ph-paper-plane-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carte 2 Statique -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 border-t-[6px] border-t-blue-500 flex flex-col p-6">
+                    <div class="flex justify-between items-start">
+                        <span class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Outil Numérique</span>
+                        <div class="relative">
+                            <button class="text-gray-400 hover:text-gray-700 p-1" onclick="toggleDropdown('menu-piste-2')"><i class="ph ph-dots-three text-2xl"></i></button>
+                            <div id="menu-piste-2" class="dropdown-menu">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"><i class="ph ph-share-network"></i> Partager</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"><i class="ph ph-flag text-orange-500"></i> Signaler</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-5 flex-grow">
+                        <h3 class="text-xl mb-3 font-oswald text-gray-800 uppercase tracking-wide">Bourse aux denrées locales (APP)</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed mb-5">Création d'un groupe WhatsApp pro ou d'une web-app simple permettant aux assos du territoire de signaler instantanément leurs surplus périssables.</p>
+                        <div class="flex items-center gap-2 text-sm text-gray-500 italic mt-4">
+                            <span class="bg-gray-200 rounded-full w-7 h-7 flex items-center justify-center text-xs font-bold text-gray-600 not-italic">AS</span>
+                            Proposé par Assos'Solidarité
+                        </div>
+                    </div>
+
+                    <div class="mt-4 mb-2 bg-gray-50 rounded-xl p-3 border border-gray-100">
+                        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 text-center">Évaluer la pertinence :</p>
+                        <div class="flex justify-center gap-2">
+                            <button class="vote-btn" onclick="vote(this, 'tres')" title="Très pertinent"><i class="ph ph-smiley text-lg"></i> <span class="vote-count">28</span></button>
+                            <button class="vote-btn" onclick="vote(this, 'plutot')" title="Plutôt pertinent"><i class="ph ph-smiley-meh text-lg"></i> <span class="vote-count">3</span></button>
+                            <button class="vote-btn" onclick="vote(this, 'pas')" title="Pas adapté"><i class="ph ph-smiley-sad text-lg"></i> <span class="vote-count">0</span></button>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center text-gray-500">
+                        <div class="flex gap-4">
+                            <button class="flex items-center gap-1.5 hover:text-blue-500 transition font-bold" onclick="toggleComments('comments-2')"><i class="ph ph-chat-circle text-xl"></i> 8</button>
+                        </div>
+                        <button class="border border-gray-200 rounded-lg px-5 py-1.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition">Détails</button>
+                    </div>
+
+                    <div id="comments-2" class="hidden mt-4 pt-4 border-t border-gray-100">
+                        <div class="text-center text-xs text-gray-400 mb-2 italic">Voir les 8 commentaires...</div>
+                        <div class="flex gap-2">
+                            <input type="text" class="form-input !p-2 !text-sm" placeholder="Votre commentaire...">
+                            <button class="bg-gpsDark text-white p-2 rounded-lg hover:bg-gray-800"><i class="ph ph-paper-plane-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Cartes dynamiques issues de la simulation GSheet
+            let pisteIndex = 3;
+            mockGSData.forEach(row => {
+                if(row.pisteOuverte && row.pisteOuverte.trim() !== "") {
+                    let v1 = Math.floor(Math.random() * 15);
+                    let v2 = Math.floor(Math.random() * 5);
+                    let v3 = Math.floor(Math.random() * 2);
+                    
+                    // Fallbacks au cas où la classification automatique échouerait
+                    let themeBadge = row.pisteTheme || "Autre idée";
+                    let titrePiste = row.pisteTitre || "Nouvelle Piste";
+
+                    // Définition de la règle de couleurs en fonction de la thématique
+                    let themeBorder = "border-t-gray-400";
+                    let themeBadgeBg = "bg-gray-50";
+                    let themeBadgeText = "text-gray-700";
+
+                    let themeLower = themeBadge.toLowerCase();
+                    if (themeLower.includes("numérique") || themeLower.includes("app")) {
+                        themeBorder = "border-t-blue-500";
+                        themeBadgeBg = "bg-blue-50";
+                        themeBadgeText = "text-blue-700";
+                    } else if (themeLower.includes("équipement") || themeLower.includes("mobile")) {
+                        themeBorder = "border-t-gpsLight";
+                        themeBadgeBg = "bg-green-50";
+                        themeBadgeText = "text-green-700";
+                    } else if (themeLower.includes("logistique") || themeLower.includes("transport")) {
+                        themeBorder = "border-t-orange-400";
+                        themeBadgeBg = "bg-orange-50";
+                        themeBadgeText = "text-orange-700";
+                    }
+
+                    htmlContent += `
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 border-t-[6px] ${themeBorder} flex flex-col p-6">
+                        <div class="flex justify-between items-start">
+                            <span class="${themeBadgeBg} ${themeBadgeText} text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">${themeBadge}</span>
+                            
+                            <div class="relative">
+                                <button class="text-gray-400 hover:text-gray-700 p-1" onclick="toggleDropdown('menu-piste-${pisteIndex}')"><i class="ph ph-dots-three text-2xl"></i></button>
+                                <div id="menu-piste-${pisteIndex}" class="dropdown-menu">
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"><i class="ph ph-share-network"></i> Partager</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"><i class="ph ph-flag text-orange-500"></i> Signaler</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-5 flex-grow">
+                            <h3 class="text-xl mb-3 font-oswald text-gray-800 uppercase tracking-wide">${titrePiste}</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-5">"${row.pisteOuverte}"</p>
+                            <div class="flex items-center gap-2 text-sm text-gray-500 italic mt-4">
+                                <span class="bg-gray-200 rounded-full w-7 h-7 flex items-center justify-center text-xs font-bold text-gray-600 not-italic">${row.structure.charAt(0)}</span>
+                                Proposé par ${row.structure}
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 mb-2 bg-gray-50 rounded-xl p-3 border border-gray-100">
+                            <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 text-center">Évaluer la pertinence :</p>
+                            <div class="flex justify-center gap-2">
+                                <button class="vote-btn" onclick="vote(this, 'tres')" title="Très pertinent"><i class="ph ph-smiley text-lg"></i> <span class="vote-count">${v1}</span></button>
+                                <button class="vote-btn" onclick="vote(this, 'plutot')" title="Plutôt pertinent"><i class="ph ph-smiley-meh text-lg"></i> <span class="vote-count">${v2}</span></button>
+                                <button class="vote-btn" onclick="vote(this, 'pas')" title="Pas adapté"><i class="ph ph-smiley-sad text-lg"></i> <span class="vote-count">${v3}</span></button>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center text-gray-500">
+                            <div class="flex gap-4">
+                                <button class="flex items-center gap-1.5 hover:text-blue-500 transition font-bold" onclick="toggleComments('comments-${pisteIndex}')"><i class="ph ph-chat-circle text-xl"></i> 0</button>
+                            </div>
+                            <button class="border border-gray-200 rounded-lg px-5 py-1.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition">Détails</button>
+                        </div>
+
+                        <div id="comments-${pisteIndex}" class="hidden mt-4 pt-4 border-t border-gray-100">
+                            <div class="text-center text-xs text-gray-400 mb-2 italic">Aucun commentaire pour l'instant.</div>
+                            <div class="flex gap-2">
+                                <input type="text" class="form-input !p-2 !text-sm" placeholder="Votre commentaire...">
+                                <button class="bg-gpsDark text-white p-2 rounded-lg hover:bg-gray-800"><i class="ph ph-paper-plane-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                    pisteIndex++;
+                }
+            });
+
+            container.innerHTML = htmlContent;
+            pistesRendered = true;
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.closest('.relative')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        }
+
+        function toggleDropdown(id) {
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                if(menu.id !== id) menu.classList.remove('show');
+            });
+            document.getElementById(id).classList.toggle('show');
+        }
+
+        function toggleComments(id) {
+            const el = document.getElementById(id);
+            if(el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('animate-[fadeIn_0.3s_ease-in-out]');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('animate-[fadeIn_0.3s_ease-in-out]');
+            }
+        }
+
+        function vote(btnElement, type) {
+            const parent = btnElement.parentElement;
+            const isActive = btnElement.classList.contains('active-' + type);
+            
+            parent.querySelectorAll('.vote-btn').forEach(b => {
+                if (b.classList.contains('active-tres') || b.classList.contains('active-plutot') || b.classList.contains('active-pas')) {
+                    let countSpan = b.querySelector('.vote-count');
+                    countSpan.innerText = parseInt(countSpan.innerText) - 1;
+                }
+                b.className = 'vote-btn'; 
+                b.querySelector('i').classList.remove('ph-fill');
+            });
+
+            if (isActive) return;
+
+            btnElement.classList.add('active-' + type);
+            btnElement.querySelector('i').classList.add('ph-fill');
+
+            let countSpan = btnElement.querySelector('.vote-count');
+            countSpan.innerText = parseInt(countSpan.innerText) + 1;
+        }
     </script>
 </body>
 </html>
