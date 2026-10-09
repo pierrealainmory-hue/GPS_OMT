@@ -1,10 +1,10 @@
+<!-- Copyright (c) 2026 - Pierre-Alain Mory / DIX SCOP CAECe fichier est régi par les termes de la licence GNU AGPL v3.Toute modification ou distribution doit conserver cette mention.-->
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comprendre le réseau des solidarités alimentaires - Grand Paris Sud</title>
-
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,11 +12,11 @@
     
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
+    
     <!-- Leaflet CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -40,7 +40,6 @@
             }
         }
     </script>
-
     <style type="text/tailwindcss">
         @layer base {
             body { @apply bg-gpsBg text-gray-800 font-georgia antialiased; }
@@ -64,7 +63,6 @@
         input[type=range] { @apply w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer transition-all; }
         input[type=range]::-webkit-slider-thumb { @apply appearance-none w-7 h-7 rounded-full bg-gpsLight cursor-pointer shadow-md border-4 border-white transition-transform hover:scale-110; }
         input[type=range]:active::-webkit-slider-thumb { @apply scale-95 bg-green-700; }
-
         .leaflet-popup-content-wrapper { @apply rounded-xl shadow-lg border border-gray-100; }
         .leaflet-popup-content { @apply m-0; }
         
@@ -72,7 +70,6 @@
         .dropdown-menu { @apply absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50 opacity-0 invisible transition-all transform scale-95 origin-top-right; }
         .dropdown-menu.show { @apply opacity-100 visible scale-100; }
     </style>
-
     <!-- ANIMATION DES FLUX -->
     <style>
         @keyframes dash-flow {
@@ -83,7 +80,6 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
-
     <header class="bg-gpsDark shadow-md sticky top-0 z-[9999]">
         <div class="max-w-6xl mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-4 text-center sm:text-left">
@@ -123,7 +119,6 @@
         <!-- ============================================== -->
         <div id="vue-formulaire" class="animate-[fadeIn_0.5s_ease-in-out]">
             <form id="enqueteOMT" class="space-y-10 max-w-5xl mx-auto">
-
                 <section class="section-container">
                     <div class="flex items-center gap-4 mb-2">
                         <div class="bg-green-50 p-3 rounded-full text-gpsLight"><i class="ph ph-identification-card text-3xl"></i></div>
@@ -140,7 +135,6 @@
                             <input type="text" name="ville_implantation" class="form-input" placeholder="Ex: Évry-Courcouronnes" required>
                         </div>
                     </div>
-
                     <div>
                         <label class="form-label mb-2">3. Volume d'activité estimé</label>
                         <div class="flex flex-wrap items-center gap-3 bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
@@ -165,7 +159,7 @@
                         <h2 class="text-2xl m-0">Bloc B : Cartographie & Écosystème</h2>
                     </div>
                     <p class="text-sm text-gray-500 mb-8 italic border-b border-gray-100 pb-4">Cartographier vos locaux actuels et identifier vos synergies locales.</p>
-
+                    
                     <div class="bg-gray-50/80 p-5 md:p-6 rounded-2xl border border-gray-200 mb-8">
                         <label class="form-label text-lg mb-2">4. Cartographie de votre réseau</label>
                         <p class="text-sm text-gray-600 mb-6 bg-white p-3 rounded-lg border border-gray-100 shadow-sm"><i class="ph ph-info mr-1 text-gpsLight"></i> <strong>Mode d'emploi :</strong> Utilisez les boutons ci-dessous pour choisir le type de repère, puis tapez une adresse dans la barre de recherche ou cliquez sur la carte.</p>
@@ -222,7 +216,7 @@
                         <h2 class="text-2xl m-0">Bloc C : Logistique & Flux</h2>
                     </div>
                     <p class="text-sm text-gray-500 mb-8 italic border-b border-gray-100 pb-4">Comprendre les volumes qui transitent et les capacités de vos locaux.</p>
-
+                    
                     <div class="space-y-10">
                         <div>
                             <label class="form-label mb-4">6. Typologie des produits : Quelles denrées distribuez-vous le plus couramment ?</label>
@@ -344,13 +338,12 @@
                     <div class="absolute top-0 right-0 -mr-8 -mt-8 opacity-5 pointer-events-none">
                         <i class="ph-fill ph-lightbulb text-[200px] text-gpsDark"></i>
                     </div>
-
                     <div class="flex items-center gap-4 mb-2 relative z-10">
                         <div class="bg-gpsDark p-3 rounded-full text-white"><i class="ph ph-lightbulb text-3xl"></i></div>
                         <h2 class="text-2xl m-0 text-gpsDark">Bloc D : Pistes de réflexion</h2>
                     </div>
                     <p class="text-sm text-gray-600 mb-8 italic border-b border-gray-200 pb-4 relative z-10">L'agglomération étudie la création d'outils logistiques partagés. <strong>Ces pistes s'inspirent d'initiatives observées sur d'autres territoires.</strong> Qu'en pensez-vous ?</p>
-
+                    
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6 relative z-10">
                         
                         <!-- Piste 1 : Camion-Cuisine partagé -->
@@ -514,7 +507,6 @@
                 <!-- Les cartes seront injectées ici par Javascript -->
             </div>
         </div>
-
     </main>
 
     <div id="successModal" class="hidden fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[10000] flex items-center justify-center px-4 transition-opacity">
@@ -532,25 +524,39 @@
             <!-- Logos -->
             <div class="flex items-center gap-6 shrink-0">
                 <a href="https://www.grandparissud.fr/" target="_blank" class="hover:opacity-80 transition" title="Visiter le site de Grand Paris Sud">
-                    <img src="Logo_GPS.png" alt="Logo Grand Paris Sud" class="h-12 object-contain">
+                    <img src="Logo_GPS.png" alt="Logo Grand Paris Sud" class="h-12 object-contain" onerror="this.src='https://placehold.co/100x48/F3F4F6/405F59?text=GPS'">
                 </a>
-
                 <div class="w-px h-10 bg-slate-300 hidden sm:block"></div>
-                
+                                
                 <a href="https://www.dix-autrement.fr/" target="_blank" class="hover:opacity-80 transition" title="Visiter le site de DIX Solutions">
-                    <img src="https://github.com/pierrealainmory-hue/logistique-data-projet/blob/main/logo%20dix%20solutions.jpg?raw=true" alt="Logo DIX Solutions" class="h-12 object-contain">
+                    <img src="https://github.com/pierrealainmory-hue/logistique-data-projet/blob/main/logo%20dix%20solutions.jpg?raw=true" alt="Logo DIX Solutions" class="h-12 object-contain" onerror="this.src='https://placehold.co/100x48/F3F4F6/405F59?text=DIX'">
                 </a>
             </div>
-            
-            <!-- Mentions légales -->
-            <div class="text-xs text-slate-500 leading-relaxed md:text-right">
-                <strong class="text-slate-700">&copy; 2026 DIX - La Coopérative des Transitions Agricoles et Alimentaires des Territoires. Tous droits réservés.</strong><br>
-                Entreprise de l'Économie Sociale et Solidaire (ESS) - SAS au SIREN 830 937 710 | Siège social : 6 Grande Rue, 77320 Chartronges<br>
-                Plateforme expérimentale conçue et propulsée pour l'agglomération Grand Paris Sud.<br>
-                <span class="mt-1 block">
-                    Contact : <a href="mailto:contact@dix-autrement.fr" class="text-gpsLight font-bold hover:underline">contact@dix-autrement.fr</a> - 
-                    Web : <a href="https://www.dix-autrement.fr/" target="_blank" class="text-gpsLight font-bold hover:underline">www.dix-autrement.fr</a>
-                </span>
+                        
+            <!-- Mentions légales & Compteur -->
+            <div class="flex flex-col md:items-end gap-5">
+                <div class="text-xs text-slate-500 leading-relaxed md:text-right">
+                    <strong class="text-slate-700">&copy; 2026 DIX - La Coopérative des Transitions Agricoles et Alimentaires des Territoires. Tous droits réservés.</strong><br>
+                    Entreprise de l'Économie Sociale et Solidaire (ESS) - SAS au SIREN 830 937 710 | Siège social : 6 Grande Rue, 77320 Chartronges<br>
+                    Plateforme expérimentale conçue et propulsée pour l'agglomération Grand Paris Sud.<br>
+                    <span class="mt-1 block">
+                        Contact : <a href="mailto:contact@dix-autrement.fr" class="text-gpsLight font-bold hover:underline">contact@dix-autrement.fr</a>
+                        Web : <a href="https://www.dix-autrement.fr/" target="_blank" class="text-gpsLight font-bold hover:underline">www.dix-autrement.fr</a>
+                    </span>
+                </div>
+
+                <!-- Composant Compteur Discret -->
+                <div class="flex items-center justify-center md:justify-end gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 shadow-sm transition-all hover:shadow hover:bg-white cursor-default group" title="Statistiques de consultation (Anonymes)">
+                    <div class="flex items-center gap-2 transition-colors group-hover:text-slate-600 text-slate-400">
+                        <i class="ph-fill ph-eye text-lg"></i>
+                        <span class="font-medium text-xs">Vues : <span id="metric-views" class="font-bold text-slate-700">...</span></span>
+                    </div>
+                    <div class="w-px h-4 bg-slate-300"></div>
+                    <div class="flex items-center gap-2 transition-colors group-hover:text-slate-600 text-slate-400">
+                        <i class="ph-fill ph-users text-lg"></i>
+                        <span class="font-medium text-xs">Uniques : <span id="metric-uniques" class="font-bold text-slate-700">...</span></span>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
@@ -810,7 +816,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-
         // --- ICÔNES COMMUNES (Petites et Rondes) ---
         const iStock = L.divIcon({ 
             html: '<div class="bg-gpsDark text-white w-7 h-7 rounded-full border-2 border-white shadow flex items-center justify-center"><i class="ph-fill ph-warehouse text-sm"></i></div>', 
@@ -833,7 +838,6 @@
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 17 }).addTo(mapFlux);
             
             let bounds = L.latLngBounds();
-
             // Génération dynamique depuis mockGSData
             mockGSData.forEach(row => {
                 const locPoint = L.latLng(row.local.lat, row.local.lng);
@@ -883,7 +887,6 @@
         }
 
         let pistesRendered = false;
-
         function renderPistes() {
             if(pistesRendered) return;
             const container = document.getElementById('pistes-container');
@@ -919,14 +922,12 @@
                             <button class="vote-btn" onclick="vote(this, 'pas')" title="Pas adapté"><i class="ph ph-smiley-sad text-lg"></i> <span class="vote-count">1</span></button>
                         </div>
                     </div>
-
                     <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center text-gray-500">
                         <div class="flex gap-4">
                             <button class="flex items-center gap-1.5 hover:text-blue-500 transition font-bold" onclick="toggleComments('comments-1')"><i class="ph ph-chat-circle text-xl"></i> 1</button>
                         </div>
                         <button class="border border-gray-200 rounded-lg px-5 py-1.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition">Détails</button>
                     </div>
-
                     <!-- Zone de commentaires -->
                     <div id="comments-1" class="hidden mt-4 pt-4 border-t border-gray-100">
                         <div class="space-y-3 mb-3">
@@ -958,7 +959,6 @@
                             <i class="ph-fill ph-info text-gpsLight text-lg"></i> Issue de la proposition GPS (Bloc D)
                         </div>
                     </div>
-
                     <div class="mt-4 mb-2 bg-gray-50 rounded-xl p-3 border border-gray-100">
                         <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 text-center">Évaluer la pertinence :</p>
                         <div class="flex justify-center gap-2">
@@ -967,14 +967,12 @@
                             <button class="vote-btn" onclick="vote(this, 'pas')" title="Pas adapté"><i class="ph ph-smiley-sad text-lg"></i> <span class="vote-count">0</span></button>
                         </div>
                     </div>
-
                     <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center text-gray-500">
                         <div class="flex gap-4">
                             <button class="flex items-center gap-1.5 hover:text-blue-500 transition font-bold" onclick="toggleComments('comments-2')"><i class="ph ph-chat-circle text-xl"></i> 0</button>
                         </div>
                         <button class="border border-gray-200 rounded-lg px-5 py-1.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition">Détails</button>
                     </div>
-
                     <div id="comments-2" class="hidden mt-4 pt-4 border-t border-gray-100">
                         <div class="text-center text-xs text-gray-400 mb-2 italic">Aucun commentaire pour l'instant.</div>
                         <div class="flex gap-2">
@@ -995,7 +993,6 @@
                     
                     let themeBadge = row.pisteTheme || "Autre idée";
                     let titrePiste = row.pisteTitre || "Nouvelle Piste";
-
                     let themeBorder = "border-t-gray-400";
                     let themeBadgeBg = "bg-gray-50";
                     let themeBadgeText = "text-gray-700";
@@ -1052,7 +1049,6 @@
                             </div>
                             <button class="border border-gray-200 rounded-lg px-5 py-1.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition">Détails</button>
                         </div>
-
                         <div id="comments-${pisteIndex}" class="hidden mt-4 pt-4 border-t border-gray-100">
                             <div class="text-center text-xs text-gray-400 mb-2 italic">Aucun commentaire pour l'instant.</div>
                             <div class="flex gap-2">
@@ -1113,10 +1109,46 @@
 
             btnElement.classList.add('active-' + type);
             btnElement.querySelector('i').classList.add('ph-fill');
-
             let countSpan = btnElement.querySelector('.vote-count');
             countSpan.innerText = parseInt(countSpan.innerText) + 1;
         }
+
+        // ==========================================
+        // ANALYTICS & COMPTEUR DISCRET (Sécurisé)
+        // ==========================================
+        document.addEventListener("DOMContentLoaded", () => {
+            const namespace = 'gps-solidarites-dix-2026'; 
+            const viewsEl = document.getElementById('metric-views');
+            const uniquesEl = document.getElementById('metric-uniques');
+
+            const formatCount = (data) => {
+                const val = data?.count !== undefined ? data.count : data?.value;
+                return val !== undefined ? val.toLocaleString('fr-FR') : "---";
+            };
+
+            fetch(`https://api.counterapi.dev/v1/${namespace}/views/up`)
+                .then(response => response.ok ? response.json() : Promise.reject("Erreur réseau"))
+                .then(data => { if(viewsEl) viewsEl.innerText = formatCount(data); })
+                .catch(() => { if(viewsEl) viewsEl.innerText = "---"; });
+
+            const visitorKey = 'gps_omt_visitor_recorded';
+            
+            if (!localStorage.getItem(visitorKey)) {
+                fetch(`https://api.counterapi.dev/v1/${namespace}/uniques/up`)
+                    .then(response => response.ok ? response.json() : Promise.reject("Erreur réseau"))
+                    .then(data => {
+                        const countText = formatCount(data);
+                        if(uniquesEl) uniquesEl.innerText = countText;
+                        if(countText !== "---") localStorage.setItem(visitorKey, 'true');
+                    })
+                    .catch(() => { if(uniquesEl) uniquesEl.innerText = "---"; });
+            } else {
+                fetch(`https://api.counterapi.dev/v1/${namespace}/uniques`)
+                    .then(response => response.ok ? response.json() : Promise.reject("Erreur réseau"))
+                    .then(data => { if(uniquesEl) uniquesEl.innerText = formatCount(data); })
+                    .catch(() => { if(uniquesEl) uniquesEl.innerText = "---"; });
+            }
+        });
     </script>
 </body>
 </html>
