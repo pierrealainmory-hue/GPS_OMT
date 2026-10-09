@@ -1,4 +1,3 @@
-<!-- Copyright (c) 2026 - Pierre-Alain Mory / DIX SCOP CAECe fichier est régi par les termes de la licence GNU AGPL v3.Toute modification ou distribution doit conserver cette mention.-->
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
 <head>
@@ -545,17 +544,9 @@
                     </span>
                 </div>
 
-                <!-- Composant Compteur Discret -->
-                <div class="flex items-center justify-center md:justify-end gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 shadow-sm transition-all hover:shadow hover:bg-white cursor-default group" title="Statistiques de consultation (Anonymes)">
-                    <div class="flex items-center gap-2 transition-colors group-hover:text-slate-600 text-slate-400">
-                        <i class="ph-fill ph-eye text-lg"></i>
-                        <span class="font-medium text-xs">Vues : <span id="metric-views" class="font-bold text-slate-700">...</span></span>
-                    </div>
-                    <div class="w-px h-4 bg-slate-300"></div>
-                    <div class="flex items-center gap-2 transition-colors group-hover:text-slate-600 text-slate-400">
-                        <i class="ph-fill ph-users text-lg"></i>
-                        <span class="font-medium text-xs">Uniques : <span id="metric-uniques" class="font-bold text-slate-700">...</span></span>
-                    </div>
+                <!-- Badge d'utilisation -->
+                <div class="mt-4 flex flex-wrap justify-center md:justify-end items-center gap-4">
+                    <img src="https://visitor-badge.laobi.icu/badge?page_id=dix.mension.simulateur.total&left_text=Ouvertures%20de%20l'outil&left_color=%23405F59&right_color=%23bfde9f" alt="Ouvertures de l'outil" class="shadow-sm rounded h-[20px]">
                 </div>
             </div>
         </div>
@@ -1112,43 +1103,6 @@
             let countSpan = btnElement.querySelector('.vote-count');
             countSpan.innerText = parseInt(countSpan.innerText) + 1;
         }
-
-        // ==========================================
-        // ANALYTICS & COMPTEUR DISCRET (Sécurisé)
-        // ==========================================
-        document.addEventListener("DOMContentLoaded", () => {
-            const namespace = 'gps-solidarites-dix-2026'; 
-            const viewsEl = document.getElementById('metric-views');
-            const uniquesEl = document.getElementById('metric-uniques');
-
-            const formatCount = (data) => {
-                const val = data?.count !== undefined ? data.count : data?.value;
-                return val !== undefined ? val.toLocaleString('fr-FR') : "---";
-            };
-
-            fetch(`https://api.counterapi.dev/v1/${namespace}/views/up`)
-                .then(response => response.ok ? response.json() : Promise.reject("Erreur réseau"))
-                .then(data => { if(viewsEl) viewsEl.innerText = formatCount(data); })
-                .catch(() => { if(viewsEl) viewsEl.innerText = "---"; });
-
-            const visitorKey = 'gps_omt_visitor_recorded';
-            
-            if (!localStorage.getItem(visitorKey)) {
-                fetch(`https://api.counterapi.dev/v1/${namespace}/uniques/up`)
-                    .then(response => response.ok ? response.json() : Promise.reject("Erreur réseau"))
-                    .then(data => {
-                        const countText = formatCount(data);
-                        if(uniquesEl) uniquesEl.innerText = countText;
-                        if(countText !== "---") localStorage.setItem(visitorKey, 'true');
-                    })
-                    .catch(() => { if(uniquesEl) uniquesEl.innerText = "---"; });
-            } else {
-                fetch(`https://api.counterapi.dev/v1/${namespace}/uniques`)
-                    .then(response => response.ok ? response.json() : Promise.reject("Erreur réseau"))
-                    .then(data => { if(uniquesEl) uniquesEl.innerText = formatCount(data); })
-                    .catch(() => { if(uniquesEl) uniquesEl.innerText = "---"; });
-            }
-        });
     </script>
 </body>
 </html>
