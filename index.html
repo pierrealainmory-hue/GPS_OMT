@@ -544,7 +544,7 @@
                 </span>
             </div>
             
-            <!-- Badge d'utilisation (Option 2 - Identifiant Enquête) -->
+            <!-- Badge d'utilisation -->
             <div class="mt-4 flex flex-wrap justify-center md:justify-end items-center gap-4">
                 <img src="https://visitor-badge.laobi.icu/badge?page_id=dix.mension.simulateur.enquete&left_text=Ouvertures%20de%20l'outil&left_color=%23405F59&right_color=%23bfde9f" alt="Ouvertures de l'outil" class="shadow-sm rounded h-[20px]">
             </div>
@@ -553,9 +553,9 @@
 
     <script>
         // ==========================================
-        // URL DE VOTRE SCRIPT GOOGLE APPS EXISTANT
+        // URL DE VOTRE SCRIPT GOOGLE APPS 
         // ==========================================
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzToXZyhf8meagetE0C7KQApUnKVRe5AoV-32rl9fRS-EzclAuRyH94uoQGY8A4KfS6DQ/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZEkooSyo13TPSNXPM0sE-5k-SyaZYkaofLUc6SZr6MXE0PH9HCCpwKGtG3CnPIxea/exec";
 
         // ==========================================
         // MOCK DATABASE (Simulation Google Sheets)
@@ -759,7 +759,7 @@
                 h += `<li class="flex items-start gap-2 bg-orange-50 p-2 rounded border border-orange-100"><i class="ph-fill ph-truck text-orange-500 text-xl mt-0.5"></i> <div><span class="font-bold text-orange-600 block text-xs uppercase">Fournisseurs (${markers.fournisseur.length})</span>` + markers.fournisseur.map(f=>f.nom).join(', ') + `</div></li>`;
             }
             
-            // CONVERSION JSON IMPORTANTE ICI
+            // CONVERSION JSON
             document.getElementById('map-recap-list').innerHTML = h || '<li class="italic text-gray-400 bg-gray-50 p-2 rounded">Aucun repère placé pour le moment.</li>';
             document.getElementById('data_distribution').value = JSON.stringify(markers.distrib);
             document.getElementById('data_fournisseurs').value = JSON.stringify(markers.fournisseur);
@@ -768,7 +768,7 @@
         setTimeout(()=>map.invalidateSize(), 500);
 
         // ==========================================
-        // SOUMISSION AU GOOGLE APP SCRIPT VIA e.parameter
+        // SOUMISSION AU GOOGLE APP SCRIPT
         // ==========================================
         const form = document.getElementById('enqueteOMT');
         form.addEventListener('submit', e => {
@@ -785,7 +785,7 @@
             formData.delete('produits');
             formData.append('produits_liste', produitsSelectionnes.join(', '));
 
-            // VÉRITABLE ENVOI VERS GOOGLE SHEETS
+            // VÉRITABLE ENVOI VERS GOOGLE SHEETS via URLSearchParams
             fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -812,7 +812,7 @@
                 btn.innerHTML = originalText;
             }).catch(error => {
                 console.error('Erreur:', error);
-                alert("Une erreur est survenue lors de l'envoi. Veuillez réessayer.");
+                alert("Une erreur est survenue lors de l'envoi. Veuillez vérifier votre connexion.");
                 btn.disabled = false;
                 btn.innerHTML = originalText;
             });
