@@ -771,7 +771,7 @@
         // SOUMISSION AU GOOGLE APP SCRIPT VIA e.parameter
         // ==========================================
         const form = document.getElementById('enqueteOMT');
-        form.addEventListener('submit', async (e) => {
+        form.addEventListener('submit', e => {
             e.preventDefault();
             
             const btn = document.getElementById('submitBtn');
@@ -779,24 +779,18 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="ph ph-spinner animate-spin text-xl"></i> <span>Envoi en cours...</span>';
             
-            // 1. On récupère les données brutes du formulaire
             const formData = new FormData(form);
-            
-            // 2. Traitement spécifique des cases à cocher "Produits"
             const checkboxesProduits = document.querySelectorAll('input[name="produits"]:checked');
             const produitsSelectionnes = Array.from(checkboxesProduits).map(cb => cb.value);
             formData.delete('produits');
             formData.append('produits_liste', produitsSelectionnes.join(', '));
 
-            try {
-                // 3. Envoi via URLSearchParams pour que le script Google le lise avec "e.parameter"
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: new URLSearchParams(formData)
-                });
-                
-                // 4. Succès et nettoyage
+            // VÉRITABLE ENVOI VERS GOOGLE SHEETS
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: new URLSearchParams(formData)
+            }).then(() => {
                 document.getElementById('successModal').classList.remove('hidden');
                 
                 form.reset(); 
@@ -814,13 +808,14 @@
                 });
                 updateRecap();
                 
-            } catch (error) {
-                console.error(error);
-                alert("Une erreur est survenue lors de l'envoi. Veuillez réessayer.");
-            } finally {
                 btn.disabled = false;
                 btn.innerHTML = originalText;
-            }
+            }).catch(error => {
+                console.error('Erreur:', error);
+                alert("Une erreur est survenue lors de l'envoi. Veuillez réessayer.");
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            });
         });
 
         window.closeModal = function() {
