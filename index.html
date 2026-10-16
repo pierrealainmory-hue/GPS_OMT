@@ -96,7 +96,7 @@
             </a>
         </div>
         
-        <!-- Barre d'onglets masquée pour la diffusion du formulaire -->
+        <!-- ONGLET MASQUÉS SUR DEMANDE POUR LA PHASE 1 DE DIFFUSION -->
         <div class="bg-white shadow-sm border-b border-gray-200 hidden">
             <div class="max-w-6xl mx-auto px-4 flex">
                 <div class="nav-tab border-gpsLight text-gpsDark bg-green-50/30" id="tab-formulaire" onclick="switchTab('formulaire')">
@@ -524,36 +524,39 @@
             <!-- Logos -->
             <div class="flex items-center gap-6 shrink-0">
                 <a href="https://www.grandparissud.fr/" target="_blank" class="hover:opacity-80 transition" title="Visiter le site de Grand Paris Sud">
-                    <img src="Logo_GPS.png" alt="Logo Grand Paris Sud" class="h-12 object-contain" onerror="this.src='https://placehold.co/100x48/F3F4F6/405F59?text=GPS'">
+                    <img src="Logo_GPS.png" alt="Logo Grand Paris Sud" class="h-12 object-contain">
                 </a>
                 <div class="w-px h-10 bg-slate-300 hidden sm:block"></div>
                                 
                 <a href="https://www.dix-autrement.fr/" target="_blank" class="hover:opacity-80 transition" title="Visiter le site de DIX Solutions">
-                    <img src="https://github.com/pierrealainmory-hue/logistique-data-projet/blob/main/logo%20dix%20solutions.jpg?raw=true" alt="Logo DIX Solutions" class="h-12 object-contain" onerror="this.src='https://placehold.co/100x48/F3F4F6/405F59?text=DIX'">
+                    <img src="https://github.com/pierrealainmory-hue/logistique-data-projet/blob/main/logo%20dix%20solutions.jpg?raw=true" alt="Logo DIX Solutions" class="h-12 object-contain">
                 </a>
             </div>
                         
-            <!-- Mentions légales & Compteur -->
-            <div class="flex flex-col md:items-end gap-5">
-                <div class="text-xs text-slate-500 leading-relaxed md:text-right">
-                    <strong class="text-slate-700">&copy; 2026 DIX - La Coopérative des Transitions Agricoles et Alimentaires des Territoires. Tous droits réservés.</strong><br>
-                    Entreprise de l'Économie Sociale et Solidaire (ESS) - SAS au SIREN 830 937 710 | Siège social : 6 Grande Rue, 77320 Chartronges<br>
-                    Plateforme expérimentale conçue et propulsée pour l'agglomération Grand Paris Sud.<br>
-                    <span class="mt-1 block">
-                        Contact : <a href="mailto:contact@dix-autrement.fr" class="text-gpsLight font-bold hover:underline">contact@dix-autrement.fr</a>
-                        Web : <a href="https://www.dix-autrement.fr/" target="_blank" class="text-gpsLight font-bold hover:underline">www.dix-autrement.fr</a>
-                    </span>
-                </div>
-
-                <!-- Badge d'utilisation -->
-                <div class="mt-4 flex flex-wrap justify-center md:justify-end items-center gap-4">
-                    <img src="https://visitor-badge.laobi.icu/badge?page_id=dix.mension.simulateur.enquete&left_text=Ouvertures%20de%20l'outil&left_color=%23405F59&right_color=%23bfde9f" alt="Ouvertures de l'outil" class="shadow-sm rounded h-[20px]">
-                </div>
+            <!-- Mentions légales -->
+            <div class="text-xs text-slate-500 leading-relaxed md:text-right">
+                <strong class="text-slate-700">&copy; 2026 DIX - La Coopérative des Transitions Agricoles et Alimentaires des Territoires. Tous droits réservés.</strong><br>
+                Entreprise de l'Économie Sociale et Solidaire (ESS) - SAS au SIREN 830 937 710 | Siège social : 6 Grande Rue, 77320 Chartronges<br>
+                Plateforme expérimentale conçue et propulsée pour l'agglomération Grand Paris Sud.<br>
+                <span class="mt-1 block">
+                    Contact : <a href="mailto:contact@dix-autrement.fr" class="text-gpsLight font-bold hover:underline">contact@dix-autrement.fr</a>
+                    Web : <a href="https://www.dix-autrement.fr/" target="_blank" class="text-gpsLight font-bold hover:underline">www.dix-autrement.fr</a>
+                </span>
+            </div>
+            
+            <!-- Badge d'utilisation (Option 2 - Identifiant Enquête) -->
+            <div class="mt-4 flex flex-wrap justify-center md:justify-end items-center gap-4">
+                <img src="https://visitor-badge.laobi.icu/badge?page_id=dix.mension.simulateur.enquete&left_text=Ouvertures%20de%20l'outil&left_color=%23405F59&right_color=%23bfde9f" alt="Ouvertures de l'outil" class="shadow-sm rounded h-[20px]">
             </div>
         </div>
     </footer>
 
     <script>
+        // ==========================================
+        // URL DE VOTRE SCRIPT GOOGLE APPS EXISTANT
+        // ==========================================
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzToXZyhf8meagetE0C7KQApUnKVRe5AoV-32rl9fRS-EzclAuRyH94uoQGY8A4KfS6DQ/exec";
+
         // ==========================================
         // MOCK DATABASE (Simulation Google Sheets)
         // ==========================================
@@ -756,16 +759,19 @@
                 h += `<li class="flex items-start gap-2 bg-orange-50 p-2 rounded border border-orange-100"><i class="ph-fill ph-truck text-orange-500 text-xl mt-0.5"></i> <div><span class="font-bold text-orange-600 block text-xs uppercase">Fournisseurs (${markers.fournisseur.length})</span>` + markers.fournisseur.map(f=>f.nom).join(', ') + `</div></li>`;
             }
             
+            // CONVERSION JSON IMPORTANTE ICI
             document.getElementById('map-recap-list').innerHTML = h || '<li class="italic text-gray-400 bg-gray-50 p-2 rounded">Aucun repère placé pour le moment.</li>';
-            
             document.getElementById('data_distribution').value = JSON.stringify(markers.distrib);
             document.getElementById('data_fournisseurs').value = JSON.stringify(markers.fournisseur);
         }
 
         setTimeout(()=>map.invalidateSize(), 500);
 
+        // ==========================================
+        // SOUMISSION AU GOOGLE APP SCRIPT VIA e.parameter
+        // ==========================================
         const form = document.getElementById('enqueteOMT');
-        form.addEventListener('submit', e => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const btn = document.getElementById('submitBtn');
@@ -773,14 +779,24 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="ph ph-spinner animate-spin text-xl"></i> <span>Envoi en cours...</span>';
             
+            // 1. On récupère les données brutes du formulaire
             const formData = new FormData(form);
+            
+            // 2. Traitement spécifique des cases à cocher "Produits"
             const checkboxesProduits = document.querySelectorAll('input[name="produits"]:checked');
             const produitsSelectionnes = Array.from(checkboxesProduits).map(cb => cb.value);
             formData.delete('produits');
             formData.append('produits_liste', produitsSelectionnes.join(', '));
 
-            // Simule l'envoi pour cette maquette
-            setTimeout(() => {
+            try {
+                // 3. Envoi via URLSearchParams pour que le script Google le lise avec "e.parameter"
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: new URLSearchParams(formData)
+                });
+                
+                // 4. Succès et nettoyage
                 document.getElementById('successModal').classList.remove('hidden');
                 
                 form.reset(); 
@@ -798,9 +814,13 @@
                 });
                 updateRecap();
                 
+            } catch (error) {
+                console.error(error);
+                alert("Une erreur est survenue lors de l'envoi. Veuillez réessayer.");
+            } finally {
                 btn.disabled = false;
                 btn.innerHTML = originalText;
-            }, 1000);
+            }
         });
 
         window.closeModal = function() {
